@@ -7,6 +7,7 @@ function App() {
   const [tabs, setTabs] = useState<chrome.tabs.Tab[]>([]);
   const [selectedIds, setSelectedIds] = useState<number[]>([]);
   const [refresh, setRefresh] = useState(false);
+  const channel = new BroadcastChannel("event_channel");
 
   useEffect(() => {
     chrome.windows
@@ -17,32 +18,37 @@ function App() {
         windows.forEach((window) => {
           windowMap.set(window.id!, window);
         });
-        chrome.tabs.query({}).then((tabs) => {
-          setTabs(tabs);
-          const windowCounter = new Map<number, number>();
-          tabs.forEach((tab) => {
-            const windowId = tab.windowId!;
-            const count = windowCounter.get(windowId) || 0;
-            windowCounter.set(windowId, count + 1);
+        chrome.tabs
+          .query({})
+          .then((tabs) => {
+            setTabs(tabs);
+            const windowCounter = new Map<number, number>();
+            tabs.forEach((tab) => {
+              const windowId = tab.windowId;
+              const count = windowCounter.get(windowId) || 0;
+              windowCounter.set(windowId, count + 1);
+            });
+            const windowCounts: { id: number; count: number }[] = [];
+            windowCounter.forEach((count, windowId) => {
+              windowCounts.push({ id: windowId, count: count });
+            });
+            // sort windowCounts by count
+            windowCounts.sort((a, b) => {
+              return b.count - a.count;
+            });
+            const windowsSorted: chrome.windows.Window[] = [];
+            windowCounts.forEach((windowCount) => {
+              const window = windowMap.get(windowCount.id);
+              if (window) {
+                windowsSorted.push(window);
+              }
+            });
+            console.log(windowCounts);
+            setWindows(windowsSorted);
+          })
+          .catch((err) => {
+            console.log(err);
           });
-          var windowCounts: { id: number; count: number }[] = [];
-          windowCounter.forEach((count, windowId) => {
-            windowCounts.push({ id: windowId, count: count });
-          });
-          // sort windowCounts by count
-          windowCounts.sort((a, b) => {
-            return b.count - a.count;
-          });
-          var windowsSorted: chrome.windows.Window[] = [];
-          windowCounts.forEach((windowCount) => {
-            const window = windowMap.get(windowCount.id);
-            if (window) {
-              windowsSorted.push(window);
-            }
-          });
-          console.log(windowCounts);
-          setWindows(windowsSorted);
-        });
       })
       .catch((err) => {
         console.log(err);
@@ -67,10 +73,15 @@ function App() {
   }, [keyword]);
 
   const handleClose = () => {
-    chrome.tabs.remove(selectedIds).then(() => {
-      console.log("closed");
-      setRefresh(!refresh);
-    });
+    chrome.tabs
+      .remove(selectedIds)
+      .then(() => {
+        console.log("closed");
+        setRefresh(!refresh);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
   return (
@@ -114,11 +125,16 @@ function App() {
               onChange={(e) => {
                 setKeyword(e.target.value);
               }}
+              ref={(input) => {
+                if (input) {
+                  input.focus();
+                }
+              }}
             />
           </label>
           <button
             type="button"
-            className="flex items-center justify-center mx-3 w-10 h-10 shadow-sm rounded-lg text-slate-400 dark:bg-slate-800 dark:ring-0 dark:text-slate-300 dark:highlight-white/5 dark:hover:bg-slate-700"
+            className="flex items-center justify-center ml-3 w-10 h-10 shadow-sm rounded-lg text-slate-400 dark:bg-slate-800 dark:ring-0 dark:text-slate-300 dark:highlight-white/5 dark:hover:bg-slate-700"
             onClick={handleClose}
           >
             <img className="w-5 h-6" src="trash.png" />
@@ -131,6 +147,7 @@ function App() {
                 window={window}
                 selectedIds={selectedIds}
                 refresh={refresh}
+                channel={channel}
               />
             );
           })}
