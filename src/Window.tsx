@@ -5,6 +5,7 @@ interface WindowProps {
   selectedIds: number[];
   refresh: boolean;
   channel: BroadcastChannel;
+  selectedWindowId: number;
 }
 
 function Window(props: WindowProps) {
@@ -19,24 +20,42 @@ function Window(props: WindowProps) {
         setIsCurrent(window.id === props.window.id);
       })
       .catch((err) => {
-        console.log(err);
+        console.error(err);
       });
     chrome.tabs
       .query({ windowId: props.window.id })
       .then((tabs) => {
         setWidth(getWidth(tabs));
         setTabs(tabs);
-        console.log(tabs);
+        chrome.tabs.get(tabs[0].id!, (tab) => {
+          console.log("tab", tab);
+        });
       })
       .catch((err) => {
-        console.log(err);
+        console.error(err);
       });
   }, [props.refresh]);
   // useEffect(() => {}, [props.selectedIds]);
   return (
-    <div className="shadow-xl min-h-36" style={{ width: `${width}px` }}>
-      <div className="sm:rounded-lg ring-1 ring-slate-900/5">
-        <div className="sm:rounded-t-xl bg-gradient-to-b from-white to-[#FBFBFB] dark:bg-none dark:bg-slate-700 dark:highlight-white/10">
+    <div
+      className={`rounded-t-xl rounded-b shadow-xl min-h-36 hover:scale-105 transition m-2 border ${
+        props.selectedWindowId === props.window.id
+          ? "border-indigo-600"
+          : "border-transparent"
+      }`}
+      style={{ width: `${width}px` }}
+      onClick={() => {
+        props.channel.postMessage({
+          type:
+            props.window.id === props.selectedWindowId
+              ? "window.unselect"
+              : "window.select",
+          window: props.window,
+        });
+      }}
+    >
+      <div className="rounded-lg ring-1 ring-slate-900/5">
+        <div className="rounded-t-xl bg-gradient-to-b from-white to-[#FBFBFB] dark:bg-none dark:bg-slate-700 dark:highlight-white/10">
           <div className="py-2.5 grid items-center px-4 gap-6">
             <div className="flex items-center">
               <div
@@ -55,8 +74,8 @@ function Window(props: WindowProps) {
                   hidden={!showCloseBtn}
                   onClick={() => {
                     props.channel.postMessage({
-                      type: "close-window",
-                      windowId: props.window.id,
+                      type: "window.close",
+                      window: props.window,
                     });
                   }}
                 >
@@ -98,22 +117,35 @@ function Window(props: WindowProps) {
           </div>
         </div>
         <div className="w-full select-none bg-slate-100 text-slate-400 flex items-center justify-center space-x-2 dark:bg-slate-900 dark:text-slate-500 rounded-b">
-          <div className="w-full min-h-[100px] flex flex-wrap content-start gap-2 p-4">
+          <div className="w-full min-h-[100px] flex flex-wrap content-start gap-1.5 p-4">
             {tabs.map((tab, index) => {
               return (
                 <div
                   key={index}
-                  onMouseEnter={() => {
-                    props.channel.postMessage({
-                      type: "hover",
-                      tab: tab,
-                    });
-                  }}
                   className={`flex items-center justify-center w-8 h-8 rounded-lg bg-white dark:bg-slate-800 shadow text-slate-900 text-sm font-bold hover:scale-125 transition ${
                     props.selectedIds && props.selectedIds.includes(tab.id!)
                       ? "scale-125 border border-indigo-600"
                       : ""
                   }`}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    props.channel.postMessage({
+                      type: "tab.select",
+                      tab,
+                    });
+                  }}
+                  onMouseEnter={() => {
+                    props.channel.postMessage({
+                      type: "tab.hover",
+                      tab,
+                    });
+                  }}
+                  onMouseLeave={() => {
+                    props.channel.postMessage({
+                      type: "tab.unhover",
+                      tab,
+                    });
+                  }}
                 >
                   <img
                     className="w-5 h-5"
@@ -142,8 +174,7 @@ function getWidth(tabs: chrome.tabs.Tab[]) {
       }
     }
   }
-  const width = 16 * 2 + cols * 32 + (cols - 1) * 8;
-  console.log(width);
+  const width = 16 * 2 + cols * 32 + (cols - 1) * 6 + 2;
   return Math.max(width, 100);
 }
 
