@@ -30,7 +30,7 @@ function App() {
           chrome.windows
             .remove(appEvent.window!.id!)
             .then(() => {
-              setRefresh(!refresh);
+              setRefresh((prevRefresh) => !prevRefresh);
             })
             .catch((err) => {
               console.error(err);
@@ -64,6 +64,7 @@ function App() {
   }, []);
 
   useEffect(() => {
+    console.log("refresh");
     inputRef.current?.focus();
     chrome.windows
       .getAll()
@@ -137,7 +138,7 @@ function App() {
     chrome.tabs
       .remove(selectedIds)
       .then(() => {
-        setRefresh(!refresh);
+        setRefresh((prevRefresh) => !prevRefresh);
       })
       .catch((err) => {
         console.error(err);
@@ -149,7 +150,7 @@ function App() {
       chrome.tabs
         .update(tabId, { pinned: true })
         .then(() => {
-          setRefresh(!refresh);
+          setRefresh((prevRefresh) => !prevRefresh);
         })
         .catch((err) => {
           console.error(err);
@@ -175,9 +176,42 @@ function App() {
     });
   };
 
+  function dialogContent() {
+    if (selectedIds.length === 0) {
+      return (
+        <div className="h-full flex justify-center gap-6 text-lg items-center">
+          <span>No tab selected</span>
+        </div>
+      );
+    } else {
+      return (
+        <div className="mt-[25px] flex justify-center gap-6 ">
+          <button
+            className="w-16 h-16 shadow-sm rounded-lg text-slate-400 dark:bg-slate-800 ring-1 ring-slate-900/10 flex justify-center flex-wrap items-center"
+            onClick={() => {
+              handleClose();
+              closeDialog();
+            }}
+          >
+            <img className="w-6 h-7" src="trash.png" />
+          </button>
+          <button
+            className="w-16 h-16 shadow-sm rounded-lg text-slate-400 dark:bg-slate-800 ring-1 ring-slate-900/10 flex justify-center flex-wrap items-center"
+            onClick={() => {
+              handlePin();
+              closeDialog();
+            }}
+          >
+            <img className="w-5 h-7" src="pin.png" />
+          </button>
+        </div>
+      );
+    }
+  }
+
   return (
     <div>
-      <div className="w-800 h-600 bg-gradient-to-b from-gray-900 to-slate-800 flex flex-col text-white">
+      <div className="w-800 h-600 bg-gradient-to-b from-white to-white dark:from-gray-900 dark:to-slate-800 flex flex-col text-black dark:text-white">
         <div className="flex m-5">
           <label className="relative block grow">
             <span className="sr-only">Search</span>
@@ -185,7 +219,7 @@ function App() {
               <MagnifyingGlassIcon />
             </span>
             <input
-              className="placeholder:italic placeholder:text-slate-400 block bg-slate-900 w-full border border-slate-300 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
+              className="placeholder:italic placeholder:text-slate-400 block bg-white dark:bg-slate-900 w-full border border-slate-300 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
               placeholder="Search for tab..."
               type="text"
               name="search"
@@ -204,7 +238,7 @@ function App() {
           </label>
           <button
             type="button"
-            className="flex items-center justify-center ml-3 w-10 h-10 shadow-sm rounded-lg text-slate-400 dark:bg-slate-800 dark:ring-0 dark:text-slate-300 dark:highlight-white/5 dark:hover:bg-slate-700"
+            className="flex items-center justify-center ml-3 w-10 h-10 shadow-sm rounded-lg text-slate-400 bg-white ring-1 ring-slate-900/10 hover:ring-slate-300 dark:bg-slate-800 dark:ring-0 dark:text-slate-300 dark:highlight-white/5 dark:hover:bg-slate-700"
             onClick={() => {
               setOpenDialog(true);
             }}
@@ -218,48 +252,28 @@ function App() {
               <Window
                 window={window}
                 selectedIds={selectedIds}
-                refresh={refresh}
                 channel={channel}
                 selectedWindowId={selectWindowId}
               />
             );
           })}
         </div>
-        <div className="w-full h-6 dark:bg-slate-700 text-slate-400 px-3 text-xs flex items-center shadow-md">
-          <div className="truncate grow">
+        <div className="w-full h-6 bg-slate-200 text-slate-500 dark:bg-slate-700 dark:text-slate-400 px-3 text-xs flex items-center shadow-md justify-between">
+          <div className="w-9/12 truncate">
             <span>{statusBarTitle}</span>
           </div>
-          <div className="w-32">
+          <div className="w-20">
             <span className="mr-2">{`selected: ${selectedIds.length}`}</span>
           </div>
         </div>
         <Dialog.Root open={openDialog} onOpenChange={setOpenDialog}>
           <Dialog.Portal>
-            <Dialog.Overlay className="bg-blackA9 data-[state=open]:animate-overlayShow fixed inset-0" />
-            <Dialog.Content className="data-[state=open]:animate-contentShow fixed top-[50%] left-[50%] w-[250px] h-[150px] translate-x-[-50%] translate-y-[-50%] bg-slate-900 highlight-white/5 rounded-[6px] p-[25px] shadow-xl shadow-slate-900/50 shadow-highlight focus:outline-none">
-              <div className="mt-[25px] flex justify-center gap-6">
-                <button
-                  className="w-16 h-16 shadow-sm rounded-lg text-slate-400 dark:bg-slate-800 flex justify-center flex-wrap items-center"
-                  onClick={() => {
-                    handleClose();
-                    closeDialog();
-                  }}
-                >
-                  <img className="w-6 h-7" src="trash.png" />
-                </button>
-                <button
-                  className="w-16 h-16 shadow-sm rounded-lg text-slate-400 dark:bg-slate-800 flex justify-center flex-wrap items-center"
-                  onClick={() => {
-                    handlePin();
-                    closeDialog();
-                  }}
-                >
-                  <img className="w-5 h-7" src="pin.png" />
-                </button>
-              </div>
+            <Dialog.Overlay className="bg-black/20 dark:bg-black/60 data-[state=open]:animate-overlayShow fixed inset-0" />
+            <Dialog.Content className="data-[state=open]:animate-contentShow fixed top-[50%] left-[50%] w-[250px] h-[150px] translate-x-[-50%] translate-y-[-50%] bg-white dark:bg-slate-900 highlight-white/5 rounded-[6px] p-[25px] shadow-xl shadow-slate-900/50 shadow-highlight focus:outline-none ring-1 ring-slate-900/10">
+              {dialogContent()}
               <Dialog.Close asChild>
                 <button
-                  className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
+                  className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2 "
                   aria-label="Close"
                   onClick={() => {
                     closeDialog();

@@ -3,7 +3,6 @@ import { useEffect, useState } from "react";
 interface WindowProps {
   window: chrome.windows.Window;
   selectedIds: number[];
-  refresh: boolean;
   channel: BroadcastChannel;
   selectedWindowId: number;
 }
@@ -14,6 +13,7 @@ function Window(props: WindowProps) {
   const [tabs, setTabs] = useState<chrome.tabs.Tab[]>([]);
   const [showCloseBtn, setShowCloseBtn] = useState(false);
   useEffect(() => {
+    console.log(props);
     chrome.windows
       .getCurrent()
       .then((window) => {
@@ -27,18 +27,15 @@ function Window(props: WindowProps) {
       .then((tabs) => {
         setWidth(getWidth(tabs));
         setTabs(tabs);
-        chrome.tabs.get(tabs[0].id!, (tab) => {
-          console.log("tab", tab);
-        });
       })
       .catch((err) => {
         console.error(err);
       });
-  }, [props.refresh]);
+  }, [props.window]);
   // useEffect(() => {}, [props.selectedIds]);
   return (
     <div
-      className={`rounded-t-xl rounded-b shadow-xl min-h-36 hover:scale-105 transition m-2 border ${
+      className={`rounded-t-xl rounded-b shadow-xl min-h-36 hover:scale-105 transition m-2 ring-1 ring-slate-900/10 border ${
         props.selectedWindowId === props.window.id
           ? "border-indigo-600"
           : "border-transparent"
