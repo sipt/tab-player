@@ -64,7 +64,6 @@ function App() {
   }, []);
 
   useEffect(() => {
-    console.log("refresh");
     inputRef.current?.focus();
     chrome.windows
       .getAll()
@@ -112,13 +111,111 @@ function App() {
 
   useEffect(() => {
     if (keyword) {
+      let searchKeyword = keyword;
+      let statusKey = "";
+      // 判断 keyword 是否以 @ 开头，如果是截取出 @ 后面的内容直到 @ 或者空格, 并替换 keyword
+      if (keyword.startsWith("@")) {
+        const index = keyword.indexOf(" ");
+        if (index === -1) {
+          statusKey = keyword.slice(1);
+          searchKeyword = "";
+        } else {
+          statusKey = keyword.slice(1, index);
+          searchKeyword = keyword.slice(index + 1);
+        }
+      }
       const selectedIds: number[] = [];
       tabs.forEach((tab) => {
-        if (
-          (selectWindowId === 0 || selectWindowId === tab.windowId) &&
-          (tab.url!.toLocaleLowerCase().includes(keyword.toLowerCase()) ||
-            tab.title!.toLocaleLowerCase().includes(keyword.toLowerCase()))
-        ) {
+        if (statusKey) {
+          switch (statusKey) {
+            case "pinned":
+              if (!tab.pinned) {
+                return;
+              }
+              break;
+            case "unpinned":
+              if (tab.pinned) {
+                return;
+              }
+              break;
+            case "audible":
+              if (!tab.audible) {
+                return;
+              }
+              break;
+            case "muted":
+              if (!tab.mutedInfo?.muted) {
+                return;
+              }
+              break;
+            case "unmuted":
+              if (tab.mutedInfo?.muted) {
+                return;
+              }
+              break;
+            case "active":
+              if (!tab.active) {
+                return;
+              }
+              break;
+            case "inactive":
+              if (tab.active) {
+                return;
+              }
+              break;
+            case "highlighted":
+              if (!tab.highlighted) {
+                return;
+              }
+              break;
+            case "unhighlighted":
+              if (tab.highlighted) {
+                return;
+              }
+              break;
+            case "current":
+              if (!tab.active || !tab.highlighted) {
+                return;
+              }
+              break;
+            case "uncurrent":
+              if (tab.active && tab.highlighted) {
+                return;
+              }
+              break;
+            case "loading":
+              if (!tab.status || tab.status !== "loading") {
+                return;
+              }
+              break;
+            case "complete":
+              if (!tab.status || tab.status !== "complete") {
+                return;
+              }
+              break;
+            case "unloaded":
+              if (!tab.status || tab.status !== "unloaded") {
+                return;
+              }
+              break;
+            default:
+              statusKey = "";
+              break;
+          }
+        }
+        if (selectWindowId !== 0 && selectWindowId !== tab.windowId) {
+          return;
+        }
+        if (searchKeyword) {
+          if (
+            tab
+              .url!.toLocaleLowerCase()
+              .includes(searchKeyword.toLowerCase()) ||
+            tab.title!.toLocaleLowerCase().includes(searchKeyword.toLowerCase())
+          ) {
+            selectedIds.push(tab.id!);
+          }
+        } else if (statusKey) {
           selectedIds.push(tab.id!);
         }
       });
@@ -126,7 +223,7 @@ function App() {
     } else {
       setSelectedIds([]);
     }
-  }, [keyword, selectWindowId]);
+  }, [keyword, selectWindowId, tabs]);
 
   useEffect(() => {
     if (!openDialog) {
