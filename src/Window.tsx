@@ -13,7 +13,6 @@ function Window(props: WindowProps) {
   const [tabs, setTabs] = useState<chrome.tabs.Tab[]>([]);
   const [showCloseBtn, setShowCloseBtn] = useState(false);
   useEffect(() => {
-    console.log(props);
     chrome.windows
       .getCurrent()
       .then((window) => {
@@ -41,7 +40,8 @@ function Window(props: WindowProps) {
           : "border-transparent"
       }`}
       style={{ width: `${width}px` }}
-      onClick={() => {
+      onClick={(e) => {
+        e.stopPropagation();
         props.channel.postMessage({
           type:
             props.window.id === props.selectedWindowId
@@ -69,7 +69,8 @@ function Window(props: WindowProps) {
                 <button
                   className="w-2.5 h-2.5 rounded-full bg-[#EC6A5F] active:bg-[#fca5a5]"
                   hidden={!showCloseBtn}
-                  onClick={() => {
+                  onClick={(e) => {
+                    e.stopPropagation();
                     props.channel.postMessage({
                       type: "window.close",
                       window: props.window,

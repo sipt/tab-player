@@ -1,6 +1,7 @@
 const { violet, blackA, mauve, green } = require("@radix-ui/colors");
 
 module.exports = {
+  darkMode: 'class',
   content: ["./src/**/*.{js,jsx,ts,tsx}"],
   theme: {
     extend: {

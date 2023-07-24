@@ -1,7 +1,8 @@
 import { useEffect, useState, useRef } from "react";
 import Window from "./Window";
 import * as Dialog from "@radix-ui/react-dialog";
-import { Cross2Icon, MagnifyingGlassIcon } from "@radix-ui/react-icons";
+import { Cross2Icon } from "@radix-ui/react-icons";
+import Toolbar from "./Toolbar";
 
 interface AppEvent {
   type: string;
@@ -15,7 +16,7 @@ function App() {
   const [keyword, setKeyword] = useState("");
   const [tabs, setTabs] = useState<chrome.tabs.Tab[]>([]);
   const [selectedIds, setSelectedIds] = useState<number[]>([]);
-  const [refresh, setRefresh] = useState(false);
+  const [refresh, setRefresh] = useState(0);
   const [openDialog, setOpenDialog] = useState(false);
   const channel = new BroadcastChannel("event_channel");
   const inputRef = useRef<HTMLInputElement>(null);
@@ -26,11 +27,22 @@ function App() {
       const appEvent = event.data as AppEvent;
       switch (appEvent.type) {
         case "window.close":
-          console.log("window.close", appEvent.window);
           chrome.windows
             .remove(appEvent.window!.id!)
             .then(() => {
-              setRefresh((prevRefresh) => !prevRefresh);
+              setWindows((prevWindows) => {
+                return prevWindows.filter((window) => {
+                  return window.id !== appEvent.window!.id;
+                });
+              });
+              setSelectWindowId((prevSelectWindowId) => {
+                if (prevSelectWindowId === appEvent.window!.id) {
+                  return 0;
+                } else {
+                  return prevSelectWindowId;
+                }
+              });
+              // setRefresh((prevRefresh) => prevRefresh + 1);
             })
             .catch((err) => {
               console.error(err);
@@ -99,6 +111,7 @@ function App() {
               }
             });
             setWindows(windowsSorted);
+            setSelectWindowId((prevSelectWindowId) => prevSelectWindowId);
           })
           .catch((err) => {
             console.error(err);
@@ -235,7 +248,7 @@ function App() {
     chrome.tabs
       .remove(selectedIds)
       .then(() => {
-        setRefresh((prevRefresh) => !prevRefresh);
+        setRefresh((preRefresh) => preRefresh + 1);
       })
       .catch((err) => {
         console.error(err);
@@ -247,7 +260,7 @@ function App() {
       chrome.tabs
         .update(tabId, { pinned: true })
         .then(() => {
-          setRefresh((prevRefresh) => !prevRefresh);
+          setRefresh((preRefresh) => preRefresh + 1);
         })
         .catch((err) => {
           console.error(err);
@@ -285,7 +298,8 @@ function App() {
         <div className="mt-[25px] flex justify-center gap-6 ">
           <button
             className="w-16 h-16 shadow-sm rounded-lg text-slate-400 dark:bg-slate-800 ring-1 ring-slate-900/10 flex justify-center flex-wrap items-center"
-            onClick={() => {
+            onClick={(e) => {
+              e.stopPropagation();
               handleClose();
               closeDialog();
             }}
@@ -294,7 +308,8 @@ function App() {
           </button>
           <button
             className="w-16 h-16 shadow-sm rounded-lg text-slate-400 dark:bg-slate-800 ring-1 ring-slate-900/10 flex justify-center flex-wrap items-center"
-            onClick={() => {
+            onClick={(e) => {
+              e.stopPropagation();
               handlePin();
               closeDialog();
             }}
@@ -309,11 +324,24 @@ function App() {
   return (
     <div>
       <div className="w-800 h-600 bg-gradient-to-b from-white to-white dark:from-gray-900 dark:to-slate-800 flex flex-col text-black dark:text-white">
-        <div className="flex m-5">
+        <Toolbar></Toolbar>
+        <div className="flex m-3">
           <label className="relative block grow">
             <span className="sr-only">Search</span>
             <span className="absolute inset-y-0 left-0 flex items-center pl-2">
-              <MagnifyingGlassIcon />
+              <svg
+                width="24"
+                height="24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                aria-hidden="true"
+              >
+                <path d="m19 19-3.5-3.5"></path>
+                <circle cx="11" cy="11" r="6"></circle>
+              </svg>
             </span>
             <input
               className="placeholder:italic placeholder:text-slate-400 block bg-white dark:bg-slate-900 w-full border border-slate-300 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
@@ -336,7 +364,8 @@ function App() {
           <button
             type="button"
             className="flex items-center justify-center ml-3 w-10 h-10 shadow-sm rounded-lg text-slate-400 bg-white ring-1 ring-slate-900/10 hover:ring-slate-300 dark:bg-slate-800 dark:ring-0 dark:text-slate-300 dark:highlight-white/5 dark:hover:bg-slate-700"
-            onClick={() => {
+            onClick={(e) => {
+              e.stopPropagation();
               setOpenDialog(true);
             }}
           >
@@ -372,7 +401,8 @@ function App() {
                 <button
                   className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2 "
                   aria-label="Close"
-                  onClick={() => {
+                  onClick={(e) => {
+                    e.stopPropagation();
                     closeDialog();
                   }}
                 >

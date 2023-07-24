@@ -7,7 +7,8 @@
     "dev": "vite",
     "build": "tsc && vite build && cp manifest.json dist/",
     "lint": "eslint src --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "package": "mkdir -p dist/tab-player && cp -rf dist.crx manifest.json public/* dist/tab-player/ && cd dist && zip -r tab-player.zip tab-player && cd .."
   },
   "dependencies": {
     "@radix-ui/colors": "^1.0.1",
