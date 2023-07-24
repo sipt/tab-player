@@ -25,6 +25,8 @@
   </p>
 </div>
 
+![Screen Shot](doc/screen.jpg)
+
 <details>
   <summary>目录</summary>
   <ol>
@@ -40,13 +42,13 @@
       </ul>
     </li>
     <li><a href="#roadmap">Roadmap</a></li>
+    <li><a href="#请我喝一杯咖啡">请我喝一杯咖啡</a></li>
     <li><a href="#license">License</a></li>
   </ol>
 </details>
 
-
-
 <!-- ABOUT THE PROJECT -->
+
 ## 项目介绍
 
 [![Tab Player Screen Shot][product-screenshot]](https://github.com/sipt/tab-player)
@@ -69,11 +71,12 @@
 
 点击 [Tab Player]() 安装 或 前往 [Chrome Web Store](https://chrome.google.com/webstore/category/extensions) 搜索 `Tab Player`
 
-
 <!-- USAGE EXAMPLES -->
+
 ## 使用
 
 ### Tab 筛选
+
 你可以使用关键词（包含在 title 或 URL 中）进行筛选：
 
 - 可以使用保留词进行筛选（`@loading`，`@unloaded`，`@complete`，`@pinned`，`@unpinned`，`@audible`）。当使用保留词时，只能使用一个，并且需要放在输入框开头，用空格与后面的关键词分开。
@@ -83,21 +86,21 @@
 ![Input Filter](doc/SCR-20230724-qvt.png)
 
 ### Tab 操作
+
 可以在输入框中直接输入 `Enter` 或点击输入框右侧的 Magic 按钮，弹出可操作选项。支持全键盘操作，切换焦点使用 `Tab` 键。目前支持 `Close` 和 `Pin`。
 
 ![Operate Tab](doc/SCR-20230724-qzl.png)
-
 
 _For more examples, please refer to the [Documentation](https://example.com)_
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-
 ### 暗黑/明亮模式切换
+
 点击又上角的 月亮 或 太阳 按钮进行切换。
 
-
 <!-- ROADMAP -->
+
 ## Roadmap
 
 - [x] 1.0 基础功能支持
@@ -107,24 +110,29 @@ _For more examples, please refer to the [Documentation](https://example.com)_
   - [x] 支持 鼠标选择/取消选择 Window
   - [x] 支持 关闭/Pin Tab
   - [x] 支持关闭 Window
-  - [x] 支持暗黑/明亮主题 
+  - [x] 支持暗黑/明亮主题
 - [x] 1.1 待计划
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
+## 赞赏
 
+觉得这个项目不错，给个 Star 或 请我我喝杯咖啡：
+|微信赞赏|支付宝赞赏|
+|---|---|
+|![微信赞赏](doc/wechat.jpeg)|![支付宝赞赏](doc/alipay.jpg)|
 
 <!-- LICENSE -->
+
 ## License
 
 Distributed under the MIT License. See `LICENSE.txt` for more information.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-
-
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
+
 [stars-shield]: https://img.shields.io/github/stars/sipt/tab-player.svg
 [stars-url]: https://github.com/sipt/tab-player/stargazers
 [issues-shield]: https://img.shields.io/github/issues/sipt/tab-player.svg

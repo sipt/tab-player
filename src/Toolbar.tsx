@@ -64,7 +64,7 @@ function Toolbar() {
             e.stopPropagation();
             chrome.tabs
               .create({
-                url: "https://github.com/sipt/tab-player",
+                url: "https://github.com/sipt/tab-player#赞赏",
               })
               .catch((err) => {
                 console.error(err);
