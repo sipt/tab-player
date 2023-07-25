@@ -42,7 +42,7 @@
       </ul>
     </li>
     <li><a href="#roadmap">Roadmap</a></li>
-    <li><a href="#请我喝一杯咖啡">请我喝一杯咖啡</a></li>
+    <li><a href="#赞赏">赞赏</a></li>
     <li><a href="#license">License</a></li>
   </ol>
 </details>
