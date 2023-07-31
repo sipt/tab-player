@@ -17,7 +17,7 @@
     以一种简便的方式来管理你的 Chrome 标签。
     <br />
     <br />
-    <a href="https://github.com/sipt/tab-player">Install</a>
+    <a href="https://chrome.google.com/webstore/detail/tab-player/jnmgfgjcefakjoeoinpncbilkdnikbgc">Install</a>
     ·
     <a href="https://github.com/sipt/tab-player/issues">Report Bug</a>
     ·
@@ -69,7 +69,7 @@
 
 ## 安装
 
-点击 [Tab Player]() 安装 或 前往 [Chrome Web Store](https://chrome.google.com/webstore/category/extensions) 搜索 `Tab Player`
+前往 [Chrome Web Store - Tab Player](https://chrome.google.com/webstore/detail/tab-player/jnmgfgjcefakjoeoinpncbilkdnikbgc) 安装插件
 
 <!-- USAGE EXAMPLES -->
 
@@ -97,7 +97,7 @@ _For more examples, please refer to the [Documentation](https://example.com)_
 
 ### 暗黑/明亮模式切换
 
-点击又上角的 月亮 或 太阳 按钮进行切换。
+点击右上角的 月亮 或 太阳 按钮进行切换。
 
 <!-- ROADMAP -->
 
