@@ -12,5 +12,5 @@
   "action": {
     "default_popup": "index.html"
   },
-  "permissions": ["windows"]
+  "permissions": ["tabs"]
 }
