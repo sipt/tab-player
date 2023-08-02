@@ -104,6 +104,7 @@ _For more examples, please refer to the [Documentation](https://example.com)_
 ## Roadmap
 
 - [x] 1.0 基础功能支持
+  - 灵感来源💡：在使用 Chrome 过程中，个人习惯会打开很多的 Tab。所以想能有个方便的方式批量关闭这些 Tab。
   - [x] 支持关键词筛选
   - [x] 支持保留词筛选
   - [x] 支持 鼠标选择/取消选择 Tab
@@ -111,7 +112,18 @@ _For more examples, please refer to the [Documentation](https://example.com)_
   - [x] 支持 关闭/Pin Tab
   - [x] 支持关闭 Window
   - [x] 支持暗黑/明亮主题
-- [x] 1.1 待计划
+- [ ] 1.1 Amazing! Group & Switch Tab
+  - 灵感来源💡：有时候在处理一个问题时，会打开很多个Tab，但他们又归属于一个来源，所以希望它们可以在一个 Group 中。我在处理一个新的问题时，可以再新建一个 Group，原生的交互关不友好。Tab 之前的切换也希望可以像操作系统中的 `Alt(Opt)+Tab` 或 Cmd+` 一样丝滑。
+  - [ ] Tab 切换
+  - [ ] Group 切换
+  - [ ] Group 创建与列表
+- [ ] 1.2 SmartBox & Options
+  - [ ] 支持智能规则筛选（SmartBox）
+    - [ ] Tab Status
+    - [ ] Tab 长期不活跃
+    - [ ] 预置策略
+  - [ ] Options
+- [ ] 1.3 待计划。。。
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
