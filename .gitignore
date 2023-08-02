@@ -1,28 +1,18 @@
-# Logs
-logs
-*.log
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-pnpm-debug.log*
-lerna-debug.log*
+# dependencies
+/node_modules
 
-.output
-output
-node_modules
-dist
-dist-ssr
-*.local
+# testing
+/coverage
 
-# Editor directories and files
-.vscode/*
-!.vscode/extensions.json
-.idea
+# build
+/dist
+
+# etc
 .DS_Store
-*.suo
-*.ntvs*
-*.njsproj
-*.sln
-*.sw?
-*.crx
-*.pem
+.env.local
+.idea
+
+# compiled
+utils/reload/*.js
+utils/reload/injections/*.js
+public/manifest.json
