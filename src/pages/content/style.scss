@@ -6,3 +6,11 @@
 .content-view {
   font-size: 30px;
 }
+
+#tab-player-iframe {
+  position: absolute;
+  left: 0;
+  top: 0;
+  border: 0;
+  z-index: 1000;
+}

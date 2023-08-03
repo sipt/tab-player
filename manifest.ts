@@ -44,7 +44,7 @@ const manifest: chrome.runtime.ManifestV3 = {
       matches: ["*://*/*"],
     },
   ],
-  permissions: ["tabs"],
+  permissions: ["tabs", "tabGroups"],
 };
 
 export default manifest;
