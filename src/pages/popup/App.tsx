@@ -337,9 +337,9 @@ function App() {
                 height="24"
                 fill="none"
                 stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
                 aria-hidden="true"
               >
                 <path d="m19 19-3.5-3.5"></path>
@@ -379,6 +379,7 @@ function App() {
           {windows.map((window) => {
             return (
               <Window
+                key={window.id}
                 window={window}
                 selectedIds={selectedIds}
                 channel={channel}

@@ -5,7 +5,7 @@ import packageJson from "./package.json";
  */
 const manifest: chrome.runtime.ManifestV3 = {
   manifest_version: 3,
-  name: packageJson.name,
+  name: packageJson.title,
   version: packageJson.version,
   description: packageJson.description,
   options_page: "src/pages/options/index.html",
@@ -38,6 +38,8 @@ const manifest: chrome.runtime.ManifestV3 = {
         "assets/css/*.css",
         "icon-128.png",
         "icon-32.png",
+        "src/pages/options/*",
+        "src/pages/panel/*",
       ],
       matches: ["*://*/*"],
     },
