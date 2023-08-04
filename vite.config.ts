@@ -47,7 +47,7 @@ export default defineConfig({
     reportCompressedSize: isProduction,
     rollupOptions: {
       input: {
-        content: resolve(pagesDir, "content", "index.ts"),
+        content: resolve(pagesDir, "content", "index.tsx"),
         background: resolve(pagesDir, "background", "index.ts"),
         contentStyle: resolve(pagesDir, "content", "style.scss"),
         panel: resolve(pagesDir, "panel", "index.html"),
