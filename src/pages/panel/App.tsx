@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import Group from "./Group";
 
 function App() {
   const inputRef = useRef<HTMLInputElement>(null);
@@ -52,44 +53,44 @@ function App() {
 
   return (
     <div
-      className="search-container w-full h-full flex flex-col backdrop-blur-sm"
-      style={{ backgroundColor: "#0f172acc" }}
-      onClick={(e) => {
-        console.log(port);
+      className="w-screen h-screen fixed z-[2000] top-0 left-0 cursor-auto flex flex-col bg-black/20 backdrop-blur-sm p-4 sm:p-6 md:p-[10vh] lg:p-[12vh] dark:bg-slate-900/80"
+      onClick={() => {
         if (port) {
           port.postMessage("dismiss");
         }
       }}
     >
       <div
-        className="max-w-[48rem] w-full mx-auto min-h-0 flex flex-col rounded-t-md bg-slate-800 search-view"
+        className="search-modal"
         onClick={(e) => {
           e.stopPropagation();
         }}
       >
-        <div className="flex min-w-0 px-4 basis-auto items-center rounded-t-md border-b border-slate-200/[0.05]">
-          <div className="search-icon w-6 h-6"></div>
-          <input
-            ref={inputRef}
-            className="text-slate-200 text-sm h-14 flex-grow flex-shrink basis-auto bg-transparent outline-0 ml-3 mr-4"
-            aria-autocomplete="both"
-            aria-labelledby="docsearch-label"
-            id="docsearch-input"
-            autoComplete="off"
-            autoCorrect="off"
-            autoCapitalize="off"
-            enterKeyHint="go"
-            spellCheck="false"
-            placeholder="Search group"
-            maxLength={64}
-            type="search"
-            value={inputValue}
-            onChange={(e) => {
-              setInputValue(e.target.value);
-            }}
-            aria-activedescendant="docsearch-item-0"
-            aria-controls="docsearch-list"
-          />
+        <div className="px-4 flex-none relative flex items-center border-b border-slate-100 dark:border-slate-200/5">
+          <div className="flex-auto flex items-center min-w-0">
+            <div className="search-icon w-6 h-6"></div>
+            <input
+              ref={inputRef}
+              className="search-input"
+              aria-autocomplete="both"
+              aria-labelledby="docsearch-label"
+              id="docsearch-input"
+              autoComplete="off"
+              autoCorrect="off"
+              autoCapitalize="off"
+              enterKeyHint="go"
+              spellCheck="false"
+              placeholder="Search group"
+              maxLength={64}
+              type="search"
+              value={inputValue}
+              onChange={(e) => {
+                setInputValue(e.target.value);
+              }}
+              aria-activedescendant="docsearch-item-0"
+              aria-controls="docsearch-list"
+            />
+          </div>
           <button
             className="escape-icon bg-slate-600 w-7 h-6 bg-no-repeat bg-center bg-[length:50%] ring-0 rounded-md text-[0]"
             type="reset"
@@ -98,8 +99,12 @@ function App() {
             Cancel
           </button>
         </div>
-        <div className="pb-6">
-          <div className="flex-auto overflow-auto"></div>
+        <div className="p-6">
+          <ul className="group-list flex-auto overflow-auto">
+            {groups.map((group) => {
+              return <Group key={group.id} group={group} />;
+            })}
+          </ul>
         </div>
         <div className="flex-none flex justify-end border-t border-slate-100 py-4 px-6 dark:border-slate-200/5;"></div>
       </div>
