@@ -8,6 +8,7 @@ const manifest: chrome.runtime.ManifestV3 = {
   name: packageJson.title,
   version: packageJson.version,
   description: packageJson.description,
+  omnibox: { keyword: "tp" },
   options_page: "src/pages/options/index.html",
   background: {
     service_worker: "src/pages/background/index.js",

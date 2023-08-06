@@ -2,6 +2,7 @@ let iframe: HTMLIFrameElement | null = null;
 let channel: MessageChannel | null = null;
 
 console.log("content script loaded");
+
 // 创建一个MutationObserver实例
 const observer = new MutationObserver(function (mutationsList) {
   for (const mutation of mutationsList) {
@@ -17,6 +18,7 @@ const observer = new MutationObserver(function (mutationsList) {
     }
   }
 });
+
 mount();
 window.onkeydown = (e) => {
   if (e.key === "o" && e.metaKey && e.shiftKey) {
@@ -41,7 +43,7 @@ function mount() {
   iframe.style.display = "none";
   iframe.style.colorScheme = "none";
   root.appendChild(iframe);
-  document.body.appendChild(root);
+  document.documentElement.appendChild(root);
   observer.observe(iframe, { attributes: true });
 }
 

@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import defaultIcon from "@assets/img/default-image.png";
 
 interface WindowProps {
   window: chrome.windows.Window;
@@ -147,7 +148,10 @@ function Window(props: WindowProps) {
                 >
                   <img
                     className="w-5 h-5"
-                    src={tab.favIconUrl || "/favicon.ico"}
+                    src={tab.favIconUrl || defaultIcon}
+                    onError={(e) => {
+                      e.currentTarget.src = defaultIcon;
+                    }}
                   />
                 </div>
               );

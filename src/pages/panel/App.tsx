@@ -1,7 +1,7 @@
 import { KeyboardEventHandler, useEffect, useRef, useState } from "react";
-import Group from "./Group";
-import NewGroup from "./NewGroup";
+import { Group, GroupEvent } from "./Group";
 import { colorFix } from "./Common";
+import { lockTabs, unlockTabs } from "@src/common/lock";
 
 function App() {
   const inputRef = useRef<HTMLInputElement>(null);
@@ -35,6 +35,7 @@ function App() {
             chrome.tabGroups
               .query({})
               .then((groups) => {
+                console.log(groups);
                 setGroups(groups);
               })
               .catch((e) => {
@@ -63,36 +64,88 @@ function App() {
   }, [groups]);
 
   useEffect(() => {
-    if (inputValue === "") {
-      setFilteredGroups(groups);
-    } else {
-      setFilteredGroups(
-        groups.filter((group) => {
-          return group.title.toLowerCase().includes(inputValue.toLowerCase());
-        })
-      );
+    let fg = groups;
+    let found = false;
+    if (inputValue !== "") {
+      fg = fg.filter((group) => {
+        if (group.title === inputValue) {
+          found = true;
+        }
+        return group.title.toLowerCase().includes(inputValue.toLowerCase());
+      });
     }
+    if (inputValue !== "") {
+      fg = fg.sort((a, b) => {
+        return a.title.length - b.title.length;
+      });
+    }
+    // 有 focusOnGroupId 时，将其放在第一位
+    if (focusOnGroupId !== 0) {
+      const index = fg.findIndex((group) => group.id === focusOnGroupId);
+      if (index !== -1) {
+        fg = [fg[index], ...fg.slice(0, index), ...fg.slice(index + 1)];
+      }
+    }
+    if (inputValue !== "" && !found) {
+      const cell = inputValue.split("[[");
+      let color = "grey";
+      if (cell.length > 1) {
+        color = cell[1].split("]]")[0];
+      }
+      fg = [
+        { id: 0, title: cell[0], color: color } as chrome.tabGroups.TabGroup,
+        ...fg,
+      ];
+    }
+    setFilteredGroups(fg);
   }, [inputValue, groups]);
 
   useEffect(() => {
-    setSelectGroupId(filteredGroups[0]?.id || 0);
+    let groupId = 0;
+    if (inputValue.length > 0) {
+      filteredGroups.forEach((group) => {
+        if (group.title === inputValue) {
+          groupId = group.id;
+        }
+      });
+    } else if (filteredGroups.length > 0) {
+      groupId = filteredGroups[0].id;
+    }
+    setSelectGroupId(groupId);
   }, [filteredGroups]);
 
-  function groupsView() {
-    if (filteredGroups.length === 0) {
-      return <NewGroup title={inputValue} />;
-    } else {
-      return filteredGroups.map((group) => {
-        return (
-          <Group
-            key={group.id}
-            group={group}
-            selectGroupId={selectGroupId}
-            focusOnGroupId={focusOnGroupId}
-          />
-        );
-      });
+  async function groupCallback(event: GroupEvent) {
+    try {
+      switch (event.type) {
+        case "group.select":
+          const tabs = await chrome.tabs.query({ groupId: event.group.id });
+          const tab = tabs.at(-1);
+          await chrome.tabs.update(tab.id!, { active: true });
+          await chrome.storage.local.set({ focusOnGroupId: event.group.id });
+          break;
+        case "group.focus":
+          setSelectGroupId(event.group.id);
+          break;
+        default:
+          break;
+      }
+    } catch (err) {
+      console.error(err);
     }
+  }
+
+  function groupsView() {
+    return filteredGroups.map((group) => {
+      return (
+        <Group
+          key={group.id}
+          group={group}
+          selectGroupId={selectGroupId}
+          focusOnGroupId={focusOnGroupId}
+          callback={groupCallback}
+        />
+      );
+    });
   }
 
   const keydownEventHandler: KeyboardEventHandler<HTMLInputElement> = async (
@@ -118,12 +171,26 @@ function App() {
         e.preventDefault();
         break;
       case "Enter":
-        groups.forEach((group) => {
-          if (group.id !== selectGroupId) {
-            chrome.tabGroups.update(group.id, { collapsed: true });
-          }
-        });
         try {
+          if (e.metaKey) {
+          }
+          console.log(focusOnGroupId, selectGroupId, inputValue);
+          if (selectGroupId !== 0 && focusOnGroupId === selectGroupId) {
+            await chrome.storage.local.set({ focusOnGroupId: 0 });
+            setInputValue("");
+            port.postMessage("dismiss");
+            return;
+          }
+          groups.forEach((group) => {
+            if (group.id !== selectGroupId) {
+              chrome.tabGroups.update(group.id, { collapsed: true });
+            }
+          });
+        } catch (err) {
+          console.error(err);
+        }
+        try {
+          await lockTabs();
           if (selectGroupId !== 0) {
             const tabs = await chrome.tabs.query({ groupId: selectGroupId });
             const tab = tabs.at(-1);
@@ -141,10 +208,14 @@ function App() {
             });
             await chrome.storage.local.set({ focusOnGroupId: groupId });
           }
+          setInputValue("");
           port.postMessage("dismiss");
         } catch (err) {
           console.error(err);
+        } finally {
+          await unlockTabs();
         }
+        e.preventDefault();
         break;
       default:
         break;
@@ -200,7 +271,7 @@ function App() {
             Cancel
           </button>
         </div>
-        <div className="p-3">
+        <div className="p-3 overflow-auto">
           <ul className="group-list flex flex-col overflow-auto gap-2">
             {groupsView()}
           </ul>
