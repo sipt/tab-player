@@ -2,6 +2,7 @@ import { KeyboardEventHandler, useEffect, useRef, useState } from "react";
 import { Group, GroupEvent } from "./Group";
 import { colorFix } from "./Common";
 import { lockTabs, unlockTabs } from "@src/common/lock";
+import { group } from "console";
 
 function App() {
   const inputRef = useRef<HTMLInputElement>(null);
@@ -13,6 +14,7 @@ function App() {
   >([]);
   const [selectGroupId, setSelectGroupId] = useState<number>(0);
   const [focusOnGroupId, setFocusOnGroupId] = useState<number>(0);
+  const [refresh, setRefresh] = useState(0);
   useEffect(() => {
     window.addEventListener("message", (event) => {
       setPort(event.ports?.[0]);
@@ -35,14 +37,12 @@ function App() {
             chrome.tabGroups
               .query({})
               .then((groups) => {
-                console.log(groups);
                 setGroups(groups);
               })
               .catch((e) => {
                 console.error(e);
               });
             chrome.storage.local.get("focusOnGroupId", (items) => {
-              console.log(items);
               setFocusOnGroupId(items.focusOnGroupId || 0);
             });
             break;
@@ -57,6 +57,20 @@ function App() {
       };
     }
   }, [port, inputRef]);
+
+  useEffect(() => {
+    chrome.tabGroups
+      .query({})
+      .then((groups) => {
+        setGroups(groups);
+      })
+      .catch((e) => {
+        console.error(e);
+      });
+    chrome.storage.local.get("focusOnGroupId", (items) => {
+      setFocusOnGroupId(items.focusOnGroupId || 0);
+    });
+  }, [refresh]);
 
   useEffect(() => {
     inputRef.current.value = "";
@@ -98,7 +112,7 @@ function App() {
       ];
     }
     setFilteredGroups(fg);
-  }, [inputValue, groups]);
+  }, [inputValue, groups, focusOnGroupId]);
 
   useEffect(() => {
     let groupId = 0;
@@ -188,6 +202,7 @@ function App() {
               }
               const tabids = tabs.map((tab) => tab.id);
               await chrome.tabs.remove(tabids);
+              setRefresh(refresh + 1);
             } catch (err) {
               console.error(err);
             } finally {
