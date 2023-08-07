@@ -173,6 +173,28 @@ function App() {
       case "Enter":
         try {
           if (e.metaKey) {
+            let allTabs = await chrome.tabs.query({});
+            const tabs = allTabs.filter((tab) => tab.groupId === selectGroupId);
+            if (tabs.length === 0) {
+              e.preventDefault();
+              return;
+            }
+            const windowId = tabs[0].windowId;
+            allTabs = allTabs.filter((tab) => tab.windowId !== windowId);
+            try {
+              await lockTabs();
+              if (tabs.length === allTabs.length) {
+                await chrome.tabs.create({});
+              }
+              const tabids = tabs.map((tab) => tab.id);
+              await chrome.tabs.remove(tabids);
+            } catch (err) {
+              console.error(err);
+            } finally {
+              await unlockTabs();
+            }
+            e.preventDefault();
+            return;
           }
           console.log(focusOnGroupId, selectGroupId, inputValue);
           if (selectGroupId !== 0 && focusOnGroupId === selectGroupId) {

@@ -74,12 +74,27 @@ chrome.omnibox.onInputEntered.addListener(async (text) => {
       await chrome.tabs.update(tab.id!, { active: true });
       await chrome.storage.local.set({ focusOnGroupId: groupId });
     } else {
-      const newTab = await chrome.tabs.create({});
+      let tabId = 0;
+      const currentWindow = await chrome.windows.getCurrent();
+      const currentTab = await chrome.tabs.query({ active: true });
+      currentTab.forEach((tab) => {
+        if (
+          tab.windowId === currentWindow.id &&
+          tab.url.startsWith("chrome://newtab/")
+        ) {
+          tabId = tab.id!;
+        }
+      });
+
+      if (tabId === 0) {
+        const newTab = await chrome.tabs.create({});
+        tabId = newTab.id!;
+      }
       const groupId = await chrome.tabs.group({
-        tabIds: newTab.id!,
+        tabIds: tabId,
       });
       const [title, color] = text.split("[[");
-      await chrome.tabGroups.update(groupId!, {
+      await chrome.tabGroups.update(groupId, {
         title: title.trim(),
         color: colorFix(color),
       });
