@@ -5,14 +5,14 @@ import icon from "@assets/img/icon-128.png";
 const Options: React.FC = () => {
   return (
     <div className="container items-start">
-      <div className="flex flex-col w-1/2 min-w-[550px] prose">
-        <h2 className="flex items-end gap-4 my-6">
+      <div className="flex flex-col w-1/2 min-w-[550px]">
+        <div className="flex items-end my-6">
           <img src={icon} className="w-12 h-12" />
-          <span className="">Tab Player</span>
-          <span className="text-l font-thin text-slate-500">Options</span>
-        </h2>
-        <div className="flex flex-col text-base gap-4">
-          <h3 className="">
+          <span className="text-2xl font-bold ml-4 mr-2">Tab Player</span>
+          <span className="text-3xl font-thin text-slate-500">Options</span>
+        </div>
+        <div className="flex flex-col text-base gap-3">
+          <div className="text-xl font-bold mt-2">
             <a
               className="opacity-20 hover:opacity-60"
               href="#component-preview-title"
@@ -20,12 +20,25 @@ const Options: React.FC = () => {
               #
             </a>{" "}
             <span className="component-preview-title">Tab Groups</span>
-          </h3>
+          </div>
           <div className="flex flex-nowrap justify-between items-center">
             <label>Panel Hotkey</label>
-            <div className="input input-bordered w-64 h-8 max-w-xs">
-              <kbd className="kbd">ctrl</kbd>+<kbd className="kbd">shift</kbd>+
-              <kbd className="kbd">del</kbd>
+            <div className="w-64 h-8 max-w-xs static">
+              <div className="flex flex-wrap content-center justify-center gap-2 w-full h-full">
+                <span className="h-6 w-8 text-lg inline-flex flex-wrap content-center justify-center rounded-md bg-slate-700">
+                  ⌘
+                </span>
+                <span className="h-6  w-8 text-lg inline-flex flex-wrap content-center justify-center rounded-md bg-slate-700">
+                  ⇧
+                </span>
+                <span className="h-6  w-8 text-lg inline-flex flex-wrap content-center justify-center rounded-md bg-slate-700">
+                  O
+                </span>
+              </div>
+              <div
+                className="relative top-[-100%] w-full h-full input input-bordered focus:outline-indigo-500 focusable bg-transparent cursor-pointer"
+                tabIndex={0}
+              ></div>
             </div>
           </div>
           <div className="flex flex-nowrap justify-between items-center">
@@ -33,7 +46,7 @@ const Options: React.FC = () => {
             <input
               type="text"
               placeholder="eg. [["
-              className="input input-bordered w-64 h-8 max-w-xs"
+              className="input input-bordered w-64 h-8 max-w-xs dark:placeholder:text-slate-600 placeholder:text-slate-400 focus:outline-indigo-500"
             />
           </div>
         </div>
