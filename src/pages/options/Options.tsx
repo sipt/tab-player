@@ -2,7 +2,11 @@ import React from "react";
 import "@pages/options/Options.css";
 import icon from "@assets/img/icon-128.png";
 
+function isComposing(e: KeyboardEvent) {}
+
 const Options: React.FC = () => {
+  const panleHotkey = {};
+
   return (
     <div className="container items-start">
       <div className="flex flex-col w-1/2 min-w-[550px]">
@@ -25,19 +29,27 @@ const Options: React.FC = () => {
             <label>Panel Hotkey</label>
             <div className="w-64 h-8 max-w-xs static">
               <div className="flex flex-wrap content-center justify-center gap-2 w-full h-full">
-                <span className="h-6 w-8 text-lg inline-flex flex-wrap content-center justify-center rounded-md bg-slate-700">
-                  ⌘
+                <span className="h-6 w-8 text-sm inline-flex flex-wrap content-center justify-center rounded-md bg-slate-400 dark:bg-slate-700">
+                  􀆔
                 </span>
-                <span className="h-6  w-8 text-lg inline-flex flex-wrap content-center justify-center rounded-md bg-slate-700">
-                  ⇧
+                <span className="h-6  w-8 text-sm inline-flex flex-wrap content-center justify-center rounded-md bg-slate-700">
+                  􀆝
                 </span>
-                <span className="h-6  w-8 text-lg inline-flex flex-wrap content-center justify-center rounded-md bg-slate-700">
-                  O
+                <span className="h-6  w-8 text-sm inline-flex flex-wrap content-center justify-center rounded-md bg-slate-700">
+                  0
                 </span>
               </div>
               <div
                 className="relative top-[-100%] w-full h-full input input-bordered focus:outline-indigo-500 focusable bg-transparent cursor-pointer"
                 tabIndex={0}
+                onKeyDown={(e) => {
+                  console.log(e);
+                  e.preventDefault();
+                }}
+                onKeyUp={(e) => {
+                  console.log(e.code);
+                  e.preventDefault();
+                }}
               ></div>
             </div>
           </div>

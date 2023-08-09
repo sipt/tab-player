@@ -1,3 +1,12 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@font-face {
+  font-family: "tab-player-font";
+  src: url("../../assets/fonts/SF-Pro.ttf");
+}
+
+body {
+  font-family: "tab-player-font";
+}
