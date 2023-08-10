@@ -1,11 +1,18 @@
 import React from "react";
 import "@pages/options/Options.css";
 import icon from "@assets/img/icon-128.png";
-
-function isComposing(e: KeyboardEvent) {}
+import { Hotkey, HotkeyManager } from "@src/common/keymap";
 
 const Options: React.FC = () => {
-  const panleHotkey = {};
+  const [hotkey, setHotkey] = React.useState<Hotkey>({} as Hotkey);
+  const hotkeyManager = new HotkeyManager({
+    set(Hotkey) {
+      setHotkey(Hotkey);
+    },
+    get() {
+      return hotkey;
+    },
+  });
 
   return (
     <div className="container items-start">
@@ -29,25 +36,27 @@ const Options: React.FC = () => {
             <label>Panel Hotkey</label>
             <div className="w-64 h-8 max-w-xs static">
               <div className="flex flex-wrap content-center justify-center gap-2 w-full h-full">
-                <span className="h-6 w-8 text-sm inline-flex flex-wrap content-center justify-center rounded-md bg-slate-400 dark:bg-slate-700">
-                  􀆔
-                </span>
-                <span className="h-6  w-8 text-sm inline-flex flex-wrap content-center justify-center rounded-md bg-slate-700">
-                  􀆝
-                </span>
-                <span className="h-6  w-8 text-sm inline-flex flex-wrap content-center justify-center rounded-md bg-slate-700">
-                  0
-                </span>
+                {hotkeyManager.Symbols().map((symbol, index) => {
+                  return (
+                    <span
+                      key={index}
+                      className="h-6 w-8 text-sm inline-flex flex-wrap content-center justify-center rounded-md bg-slate-400 dark:bg-slate-700"
+                    >
+                      {symbol}
+                    </span>
+                  );
+                })}
               </div>
               <div
+                id="hotkey-input"
                 className="relative top-[-100%] w-full h-full input input-bordered focus:outline-indigo-500 focusable bg-transparent cursor-pointer"
                 tabIndex={0}
                 onKeyDown={(e) => {
-                  console.log(e);
+                  hotkeyManager.handle(e.nativeEvent);
                   e.preventDefault();
                 }}
                 onKeyUp={(e) => {
-                  console.log(e.code);
+                  hotkeyManager.handle(e.nativeEvent);
                   e.preventDefault();
                 }}
               ></div>
