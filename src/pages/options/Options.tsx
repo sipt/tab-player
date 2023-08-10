@@ -1,10 +1,16 @@
-import React from "react";
+import { useState, useEffect } from "react";
 import "@pages/options/Options.css";
 import icon from "@assets/img/icon-128.png";
 import { Hotkey, HotkeyManager } from "@src/common/keymap";
+import {
+  loadOptionsConfig,
+  saveOptionsConfig,
+} from "@src/common/optionsConfig";
 
-const Options: React.FC = () => {
-  const [hotkey, setHotkey] = React.useState<Hotkey>({} as Hotkey);
+function Options() {
+  const [hotkey, setHotkey] = useState<Hotkey>({} as Hotkey);
+  const [colorSeparator, setColorSeparator] = useState<string>("");
+  const [theme, setTheme] = useState<string>("");
   const hotkeyManager = new HotkeyManager({
     set(Hotkey) {
       setHotkey(Hotkey);
@@ -14,6 +20,26 @@ const Options: React.FC = () => {
     },
   });
 
+  useEffect(() => {
+    loadOptionsConfig().then((optionsConfig) => {
+      setHotkey(optionsConfig.hotkey);
+      setColorSeparator(optionsConfig.colorSeparator);
+      setTheme(optionsConfig.theme);
+    });
+  }, []);
+
+  useEffect(() => {
+    saveOptionsConfig({
+      hotkey: hotkey,
+      colorSeparator: colorSeparator,
+      theme: theme,
+    })
+      .then(() => {})
+      .catch((err) => {
+        console.error(err);
+      });
+  }, [hotkey, colorSeparator, theme]);
+
   return (
     <div className="container items-start">
       <div className="flex flex-col w-1/2 min-w-[550px]">
@@ -22,15 +48,30 @@ const Options: React.FC = () => {
           <span className="text-2xl font-bold ml-4 mr-2">Tab Player</span>
           <span className="text-3xl font-thin text-slate-500">Options</span>
         </div>
-        <div className="flex flex-col text-base gap-3">
+        <div className="flex flex-col text-base gap-3" id="general">
           <div className="text-xl font-bold mt-2">
-            <a
-              className="opacity-20 hover:opacity-60"
-              href="#component-preview-title"
-            >
+            <a className="opacity-20 hover:opacity-60" href="#general">
               #
             </a>{" "}
-            <span className="component-preview-title">Tab Groups</span>
+            <span>General</span>
+          </div>
+          <div className="flex flex-nowrap justify-between items-center">
+            <label>Theme</label>
+            <div className="flex flex-wrap justify-center w-64 h-8 max-w-xs">
+              <label className="swap swap-rotate">
+                <input type="checkbox" />
+                <span className="swap-off fill-current w-5 h-5">􀆭</span>
+                <span className="swap-on fill-current w-5 h-5">􀆹</span>
+              </label>
+            </div>
+          </div>
+        </div>
+        <div className="flex flex-col text-base gap-3" id="tabGroups">
+          <div className="text-xl font-bold mt-4">
+            <a className="opacity-20 hover:opacity-60" href="#tabGroups">
+              #
+            </a>{" "}
+            <span>Tab Groups</span>
           </div>
           <div className="flex flex-nowrap justify-between items-center">
             <label>Panel Hotkey</label>
@@ -67,6 +108,10 @@ const Options: React.FC = () => {
             <input
               type="text"
               placeholder="eg. [["
+              value={colorSeparator}
+              onChange={(e) => {
+                setColorSeparator(e.target.value);
+              }}
               className="input input-bordered w-64 h-8 max-w-xs dark:placeholder:text-slate-600 placeholder:text-slate-400 focus:outline-indigo-500"
             />
           </div>
@@ -74,6 +119,6 @@ const Options: React.FC = () => {
       </div>
     </div>
   );
-};
+}
 
 export default Options;
