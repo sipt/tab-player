@@ -40,6 +40,11 @@ function Options() {
       });
   }, [hotkey, colorSeparator, theme]);
 
+  useEffect(() => {
+    document.documentElement.setAttribute("data-theme", theme);
+    document.documentElement.className = theme;
+  }, [theme]);
+
   return (
     <div className="container items-start">
       <div className="flex flex-col w-1/2 min-w-[550px]">
@@ -57,12 +62,21 @@ function Options() {
           </div>
           <div className="flex flex-nowrap justify-between items-center">
             <label>Theme</label>
-            <div className="flex flex-wrap justify-center w-64 h-8 max-w-xs">
-              <label className="swap swap-rotate">
-                <input type="checkbox" />
-                <span className="swap-off fill-current w-5 h-5">􀆭</span>
-                <span className="swap-on fill-current w-5 h-5">􀆹</span>
-              </label>
+            <div className="flex flex-wrap justify-center content-center w-64 h-8 max-w-xs">
+              <div className="form-control w-52">
+                <label className="cursor-pointer label">
+                  <span>􀆭</span>
+                  <input
+                    type="checkbox"
+                    className="toggle toggle-primary"
+                    checked={theme === "dark"}
+                    onChange={(e) => {
+                      setTheme(e.target.checked ? "dark" : "light");
+                    }}
+                  />
+                  <span>􀆹</span>
+                </label>
+              </div>
             </div>
           </div>
         </div>
