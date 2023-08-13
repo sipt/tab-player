@@ -142,4 +142,14 @@ class HotkeyManager {
   }
 }
 
-export { KeyCode, Hotkey, HotkeyManager };
+function MatchHotkey(hotkey: Hotkey, e: KeyboardEvent): boolean {
+  return (
+    hotkey.altKey === e.altKey &&
+    hotkey.code === e.code &&
+    hotkey.ctrlKey === e.ctrlKey &&
+    hotkey.metaKey === e.metaKey &&
+    hotkey.shiftKey === e.shiftKey
+  );
+}
+
+export { KeyCode, Hotkey, HotkeyManager, MatchHotkey };

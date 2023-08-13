@@ -10,7 +10,7 @@ reloadOnUpdate("pages/background");
  */
 reloadOnUpdate("pages/content/style.scss");
 
-console.log("background loaded 1111");
+console.log("background loaded");
 
 chrome.tabs.onCreated.addListener(async (tab) => {
   if (tab.groupId !== -1) {

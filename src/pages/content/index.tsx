@@ -1,13 +1,59 @@
 let iframe: HTMLIFrameElement | null = null;
 let channel: MessageChannel | null = null;
 
-console.log("content script loaded");
+interface Hotkey {
+  altKey: boolean;
+  /** [MDN Reference](https://developer.mozilla.org/docs/Web/API/KeyboardEvent/code) */
+  code: string;
+  /** [MDN Reference](https://developer.mozilla.org/docs/Web/API/KeyboardEvent/ctrlKey) */
+  ctrlKey: boolean;
+  /** [MDN Reference](https://developer.mozilla.org/docs/Web/API/KeyboardEvent/key) */
+  key: string;
+  /** [MDN Reference](https://developer.mozilla.org/docs/Web/API/KeyboardEvent/metaKey) */
+  metaKey: boolean;
+  /** [MDN Reference](https://developer.mozilla.org/docs/Web/API/KeyboardEvent/shiftKey) */
+  shiftKey: boolean;
+}
+interface OptionsConfig {
+  // GeneralConfig
+  theme?: string;
+
+  // TabGroupsConfig
+  hotkey?: Hotkey;
+  colorSeparator?: string;
+}
+
+const defaultOptionsConfig: OptionsConfig = {
+  theme: "dark",
+  hotkey: {
+    altKey: false,
+    code: "KeyO",
+    ctrlKey: false,
+    key: "o",
+    metaKey: true,
+    shiftKey: true,
+  },
+  colorSeparator: "[[",
+};
+
+async function loadOptionsConfig(): Promise<OptionsConfig> {
+  try {
+    let { optionsConfig } = await chrome.storage.local.get("optionsConfig");
+    if (!optionsConfig) {
+      optionsConfig = defaultOptionsConfig;
+      await chrome.storage.local.set({ optionsConfig: optionsConfig });
+    }
+    return optionsConfig;
+  } catch (err) {
+    console.error(err);
+    return defaultOptionsConfig;
+  }
+}
 
 // 创建一个MutationObserver实例
 const observer = new MutationObserver(function (mutationsList) {
   for (const mutation of mutationsList) {
     if (mutation.type === "attributes" && mutation.attributeName === "style") {
-      console.log(iframe.style.display);
       if (iframe.style.display === "block") {
         iframe.contentWindow.focus();
         channel.port1.postMessage("redisplay");
@@ -18,19 +64,37 @@ const observer = new MutationObserver(function (mutationsList) {
     }
   }
 });
+let optionsConfig = {} as OptionsConfig;
+function init() {
+  loadOptionsConfig().then((opc) => {
+    optionsConfig = opc;
+    window.onkeydown = (e) => {
+      if (
+        optionsConfig.hotkey.altKey === e.altKey &&
+        optionsConfig.hotkey.code === e.code &&
+        optionsConfig.hotkey.ctrlKey === e.ctrlKey &&
+        optionsConfig.hotkey.metaKey === e.metaKey &&
+        optionsConfig.hotkey.shiftKey === e.shiftKey
+      ) {
+        if (iframe) {
+          toggle();
+        }
+      } else if (e.key === "Escape") {
+        if (iframe) {
+          iframe.style.display = "none";
+        }
+      }
+    };
+  });
+  mount();
+  chrome.storage.local.onChanged.addListener((changes) => {
+    if (changes.optionsConfig) {
+      optionsConfig = changes.optionsConfig.newValue;
+    }
+  });
+}
 
-mount();
-window.onkeydown = (e) => {
-  if (e.key === "o" && e.metaKey && e.shiftKey) {
-    if (iframe) {
-      toggle();
-    }
-  } else if (e.key === "Escape") {
-    if (iframe) {
-      iframe.style.display = "none";
-    }
-  }
-};
+init();
 
 function mount() {
   const root = document.createElement("div");

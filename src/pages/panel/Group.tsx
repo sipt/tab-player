@@ -94,12 +94,13 @@ function Group(props: {
           <div className="flex justify-between px-3 py-2">
             <div
               className={`group-title border-0 ${
-                colorMap[props.group.color]
+                colorMap[props.group.color.toLowerCase()]
               } text-slate-800 dark:text-slate-100`}
             >
               {props.group.title || "(No Title)"}
             </div>
-            {props.focusOnGroupId === props.group.id ? (
+            {props.focusOnGroupId != 0 &&
+            props.focusOnGroupId === props.group.id ? (
               <div className="flex-none ml-3.5 w-5 h-5 rounded-full">
                 <img className="w-5 h-5" src={activeGroup} />
               </div>

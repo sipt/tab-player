@@ -81,7 +81,7 @@ function Options() {
           </div>
         </div>
         <div className="flex flex-col text-base gap-3" id="tabGroups">
-          <div className="text-xl font-bold mt-4">
+          <div className="text-xl font-bold mt-6">
             <a className="opacity-20 hover:opacity-60" href="#tabGroups">
               #
             </a>{" "}
@@ -126,7 +126,7 @@ function Options() {
               onChange={(e) => {
                 setColorSeparator(e.target.value);
               }}
-              className="input input-bordered w-64 h-8 max-w-xs dark:placeholder:text-slate-600 placeholder:text-slate-400 focus:outline-indigo-500"
+              className="input input-bordered text-center w-64 h-8 max-w-xs dark:placeholder:text-slate-600 placeholder:text-slate-400 focus:outline-indigo-500"
             />
           </div>
         </div>

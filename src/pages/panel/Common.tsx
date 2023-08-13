@@ -22,7 +22,7 @@ function colorFix(
   | "purple"
   | "cyan"
   | "orange" {
-  if (colorMap[color]) {
+  if (colorMap[color.toLowerCase()]) {
     return color as any;
   } else {
     return "grey";

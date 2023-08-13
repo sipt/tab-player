@@ -2,7 +2,7 @@ import { KeyboardEventHandler, useEffect, useRef, useState } from "react";
 import { Group, GroupEvent } from "./Group";
 import { colorFix } from "./Common";
 import { lockTabs, unlockTabs } from "@src/common/lock";
-import { group } from "console";
+import { loadOptionsConfig } from "@src/common/optionsConfig";
 
 function App() {
   const inputRef = useRef<HTMLInputElement>(null);
@@ -15,9 +15,38 @@ function App() {
   const [selectGroupId, setSelectGroupId] = useState<number>(0);
   const [focusOnGroupId, setFocusOnGroupId] = useState<number>(0);
   const [refresh, setRefresh] = useState(0);
+  const [colorSeparator, setColorSeparator] = useState<string>("[[");
   useEffect(() => {
     window.addEventListener("message", (event) => {
       setPort(event.ports?.[0]);
+    });
+    loadOptionsConfig()
+      .then((optionsConfig) => {
+        setColorSeparator(optionsConfig.colorSeparator || "[[");
+        document.documentElement.classList.remove("dark", "light");
+        document.documentElement.classList.add(optionsConfig.theme || "dark");
+        document.documentElement.setAttribute(
+          "data-theme",
+          optionsConfig.theme || "dark"
+        );
+      })
+      .catch((e) => {
+        console.error(e);
+      });
+    chrome.storage.local.onChanged.addListener((changes) => {
+      if (changes.optionsConfig) {
+        setColorSeparator(
+          changes.optionsConfig.newValue.colorSeparator || "[["
+        );
+        document.documentElement.classList.remove("dark", "light");
+        document.documentElement.classList.add(
+          changes.optionsConfig.newValue.theme || "dark"
+        );
+        document.documentElement.setAttribute(
+          "data-theme",
+          changes.optionsConfig.newValue.theme || "dark"
+        );
+      }
     });
   }, []);
 
@@ -101,10 +130,10 @@ function App() {
       }
     }
     if (inputValue !== "" && !found) {
-      const cell = inputValue.split("[[");
+      const cell = inputValue.split(colorSeparator);
       let color = "grey";
       if (cell.length > 1) {
-        color = cell[1].split("]]")[0];
+        color = colorFix(cell[1]);
       }
       fg = [
         { id: 0, title: cell[0], color: color } as chrome.tabGroups.TabGroup,
@@ -211,7 +240,6 @@ function App() {
             e.preventDefault();
             return;
           }
-          console.log(focusOnGroupId, selectGroupId, inputValue);
           if (selectGroupId !== 0 && focusOnGroupId === selectGroupId) {
             await chrome.storage.local.set({ focusOnGroupId: 0 });
             setInputValue("");
@@ -238,7 +266,7 @@ function App() {
             const groupId = await chrome.tabs.group({
               tabIds: newTab.id!,
             });
-            const [title, color] = inputValue.split("[[");
+            const [title, color] = inputValue.split(colorSeparator);
             await chrome.tabGroups.update(groupId!, {
               title: title.trim(),
               color: colorFix(color),
@@ -300,13 +328,6 @@ function App() {
               aria-controls="docsearch-list"
             />
           </div>
-          <button
-            className="escape-icon bg-slate-600 w-7 h-6 bg-no-repeat bg-center bg-[length:50%] ring-0 rounded-md text-[0]"
-            type="reset"
-            aria-label="Cancel"
-          >
-            Cancel
-          </button>
         </div>
         <div className="p-3 overflow-auto">
           <ul className="group-list flex flex-col overflow-auto gap-2">
