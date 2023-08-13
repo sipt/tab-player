@@ -29,4 +29,16 @@ function colorFix(
   }
 }
 
-export { colorMap, colorFix };
+const colors = [
+  "grey",
+  "blue",
+  "red",
+  "yellow",
+  "green",
+  "pink",
+  "purple",
+  "cyan",
+  "orange",
+];
+
+export { colorMap, colorFix, colors };

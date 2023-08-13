@@ -10,6 +10,7 @@ import {
 function Options() {
   const [hotkey, setHotkey] = useState<Hotkey>({} as Hotkey);
   const [colorSeparator, setColorSeparator] = useState<string>("");
+  const [defaultNames, setDefaultNames] = useState<string[]>([]);
   const [theme, setTheme] = useState<string>("");
   const hotkeyManager = new HotkeyManager({
     set(Hotkey) {
@@ -25,6 +26,7 @@ function Options() {
       setHotkey(optionsConfig.hotkey);
       setColorSeparator(optionsConfig.colorSeparator);
       setTheme(optionsConfig.theme);
+      setDefaultNames(optionsConfig.defaultNames);
     });
   }, []);
 
@@ -33,12 +35,13 @@ function Options() {
       hotkey: hotkey,
       colorSeparator: colorSeparator,
       theme: theme,
+      defaultNames: defaultNames,
     })
       .then(() => {})
       .catch((err) => {
         console.error(err);
       });
-  }, [hotkey, colorSeparator, theme]);
+  }, [hotkey, colorSeparator, theme, defaultNames]);
 
   useEffect(() => {
     document.documentElement.setAttribute("data-theme", theme);
@@ -126,8 +129,19 @@ function Options() {
               onChange={(e) => {
                 setColorSeparator(e.target.value);
               }}
-              className="input input-bordered text-center w-64 h-8 max-w-xs dark:placeholder:text-slate-600 placeholder:text-slate-400 focus:outline-indigo-500"
+              className="input input-bordered w-64 h-8 max-w-xs dark:placeholder:text-slate-600 placeholder:text-slate-400 focus:outline-indigo-500"
             />
+          </div>
+          <div className="flex flex-nowrap justify-between items-start">
+            <label>Default Names</label>
+            <textarea
+              className="textarea textarea-bordered w-64 h-48  dark:placeholder:text-slate-600 placeholder:text-slate-400 focus:outline-indigo-500"
+              placeholder="Default names split by line"
+              value={defaultNames.join("\n")}
+              onChange={(e) => {
+                setDefaultNames(e.target.value.split("\n"));
+              }}
+            ></textarea>
           </div>
         </div>
       </div>

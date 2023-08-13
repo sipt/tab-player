@@ -1,6 +1,6 @@
 import { KeyboardEventHandler, useEffect, useRef, useState } from "react";
 import { Group, GroupEvent } from "./Group";
-import { colorFix } from "./Common";
+import { colorFix, colorMap, colors } from "./Common";
 import { lockTabs, unlockTabs } from "@src/common/lock";
 import { loadOptionsConfig } from "@src/common/optionsConfig";
 
@@ -16,6 +16,8 @@ function App() {
   const [focusOnGroupId, setFocusOnGroupId] = useState<number>(0);
   const [refresh, setRefresh] = useState(0);
   const [colorSeparator, setColorSeparator] = useState<string>("[[");
+  const [defaultNames, setDefaultNames] = useState<string[]>([]);
+  let randomGroup: { name: string; color: string } = { name: "", color: "" };
   useEffect(() => {
     window.addEventListener("message", (event) => {
       setPort(event.ports?.[0]);
@@ -23,6 +25,7 @@ function App() {
     loadOptionsConfig()
       .then((optionsConfig) => {
         setColorSeparator(optionsConfig.colorSeparator || "[[");
+        setDefaultNames(optionsConfig.defaultNames);
         document.documentElement.classList.remove("dark", "light");
         document.documentElement.classList.add(optionsConfig.theme || "dark");
         document.documentElement.setAttribute(
@@ -38,6 +41,7 @@ function App() {
         setColorSeparator(
           changes.optionsConfig.newValue.colorSeparator || "[["
         );
+        setDefaultNames(changes.optionsConfig.newValue.defaultNames);
         document.documentElement.classList.remove("dark", "light");
         document.documentElement.classList.add(
           changes.optionsConfig.newValue.theme || "dark"
@@ -137,6 +141,19 @@ function App() {
       }
       fg = [
         { id: 0, title: cell[0], color: color } as chrome.tabGroups.TabGroup,
+        ...fg,
+      ];
+    } else if (inputValue === "") {
+      randomGroup.name =
+        defaultNames[Math.floor(Math.random() * defaultNames.length)];
+      randomGroup.color = colors[Math.floor(Math.random() * colors.length)];
+      console.log(randomGroup);
+      fg = [
+        {
+          id: 0,
+          title: randomGroup.name,
+          color: randomGroup.color,
+        } as chrome.tabGroups.TabGroup,
         ...fg,
       ];
     }
