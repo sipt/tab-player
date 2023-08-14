@@ -63,11 +63,7 @@ function Group(props: {
         })
       );
     } else {
-      els.push(
-        <div>
-          Please enter the group name and press "Enter" to create the group.
-        </div>
-      );
+      els.push(<div>{`Press "Enter" to create the group.`}</div>);
     }
     return els;
   }
