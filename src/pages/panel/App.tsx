@@ -182,10 +182,27 @@ function App() {
     try {
       switch (event.type) {
         case "group.select":
-          const tabs = await chrome.tabs.query({ groupId: event.group.id });
-          const tab = tabs.at(-1);
-          await chrome.tabs.update(tab.id!, { active: true });
-          await chrome.storage.local.set({ focusOnGroupId: event.group.id });
+          if (event.group.id > 0) {
+            const tabs = await chrome.tabs.query({ groupId: event.group.id });
+            const tab = tabs.at(-1);
+            await chrome.tabs.update(tab.id, { active: true });
+            await chrome.storage.local.set({ focusOnGroupId: event.group.id });
+          } else {
+            const newTab = await chrome.tabs.create({});
+            const groupId = await chrome.tabs.group({
+              tabIds: newTab.id,
+            });
+            let [title, color] = [randomGroup.name, randomGroup.color];
+            if (inputValue !== "") {
+              [title, color] = inputValue.split(colorSeparator);
+            }
+            console.log(inputValue, title, color);
+            await chrome.tabGroups.update(groupId, {
+              title: title.trim(),
+              color: colorFix(color),
+            });
+            await chrome.storage.local.set({ focusOnGroupId: groupId });
+          }
           break;
         case "group.focus":
           setSelectGroupId(event.group.id);
