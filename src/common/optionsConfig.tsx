@@ -91,7 +91,6 @@ async function loadOptionsConfig(): Promise<OptionsConfig> {
     } else {
       optionsConfig = { ...defaultOptionsConfig, ...optionsConfig };
     }
-    console.log("optionsConfig", optionsConfig);
     await chrome.storage.local.set({ optionsConfig: optionsConfig });
     return optionsConfig;
   } catch (err) {

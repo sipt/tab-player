@@ -1,5 +1,5 @@
 let iframe: HTMLIFrameElement | null = null;
-let channel: MessageChannel | null = null;
+let channel: MessageChannel | null = new MessageChannel();
 
 interface Hotkey {
   altKey: boolean;
@@ -50,20 +50,6 @@ async function loadOptionsConfig(): Promise<OptionsConfig> {
   }
 }
 
-// 创建一个MutationObserver实例
-const observer = new MutationObserver(function (mutationsList) {
-  for (const mutation of mutationsList) {
-    if (mutation.type === "attributes" && mutation.attributeName === "style") {
-      if (iframe.style.display === "block") {
-        iframe.contentWindow.focus();
-        channel.port1.postMessage("redisplay");
-      } else {
-        window.focus();
-      }
-      break;
-    }
-  }
-});
 let optionsConfig = {} as OptionsConfig;
 function init() {
   loadOptionsConfig().then((opc) => {
@@ -76,9 +62,7 @@ function init() {
         optionsConfig.hotkey.metaKey === e.metaKey &&
         optionsConfig.hotkey.shiftKey === e.shiftKey
       ) {
-        if (iframe) {
-          toggle();
-        }
+        toggle();
       } else if (e.key === "Escape") {
         if (iframe) {
           iframe.style.display = "none";
@@ -86,17 +70,25 @@ function init() {
       }
     };
   });
-  mount();
-  chrome.storage.local.onChanged.addListener((changes) => {
-    if (changes.optionsConfig) {
-      optionsConfig = changes.optionsConfig.newValue;
+}
+function mount() {
+  // 创建一个MutationObserver实例
+  const observer = new MutationObserver(function (mutationsList) {
+    for (const mutation of mutationsList) {
+      if (
+        mutation.type === "attributes" &&
+        mutation.attributeName === "style"
+      ) {
+        if (iframe.style.display === "block") {
+          iframe.contentWindow.focus();
+          channel.port1.postMessage("redisplay");
+        } else {
+          window.focus();
+        }
+        break;
+      }
     }
   });
-}
-
-init();
-
-function mount() {
   const root = document.createElement("div");
   root.id = "tab-player-root";
   iframe = document.createElement("iframe");
@@ -104,28 +96,39 @@ function mount() {
   iframe.id = "tab-player-iframe";
   iframe.style.width = "100vw";
   iframe.style.height = "100vh";
-  iframe.style.display = "none";
   iframe.style.colorScheme = "none";
   root.appendChild(iframe);
   document.documentElement.appendChild(root);
   observer.observe(iframe, { attributes: true });
+  window.onclose = () => {
+    observer.disconnect();
+  };
+  chrome.storage.local.onChanged.addListener((changes) => {
+    if (changes.optionsConfig) {
+      optionsConfig = changes.optionsConfig.newValue;
+    }
+  });
+  iframe.onload = () => {
+    setTimeout(() => {
+      iframe.contentWindow.postMessage("init-tab-player-panel", "*", [
+        channel.port2,
+      ]);
+      channel.port1.onmessage = (e) => {
+        if (e.data === "dismiss") {
+          toggle();
+        }
+      };
+      iframe.contentWindow.focus();
+      channel.port1.postMessage("redisplay");
+    }, 200);
+  };
 }
 
-window.onclose = () => {
-  observer.disconnect();
-};
-
+init();
 function toggle() {
-  iframe.style.display = iframe.style.display === "none" ? "block" : "none";
-  if (!channel) {
-    channel = new MessageChannel();
-    iframe.contentWindow.postMessage("init-tab-player-panel", "*", [
-      channel.port2,
-    ]);
-    channel.port1.onmessage = (e) => {
-      if (e.data === "dismiss") {
-        toggle();
-      }
-    };
+  if (iframe) {
+    iframe.style.display = iframe.style.display === "none" ? "block" : "none";
+  } else {
+    mount();
   }
 }

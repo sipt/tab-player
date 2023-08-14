@@ -1,6 +1,6 @@
 import { KeyboardEventHandler, useEffect, useRef, useState } from "react";
 import { Group, GroupEvent } from "./Group";
-import { colorFix, colorMap, colors } from "./Common";
+import { colorFix, colors } from "./Common";
 import { lockTabs, unlockTabs } from "@src/common/lock";
 import { loadOptionsConfig } from "@src/common/optionsConfig";
 
@@ -281,18 +281,17 @@ function App() {
           if (selectGroupId !== 0) {
             const tabs = await chrome.tabs.query({ groupId: selectGroupId });
             const tab = tabs.at(-1);
-            await chrome.tabs.update(tab.id!, { active: true });
+            await chrome.tabs.update(tab.id, { active: true });
             await chrome.storage.local.set({ focusOnGroupId: selectGroupId });
           } else {
             const newTab = await chrome.tabs.create({});
             const groupId = await chrome.tabs.group({
-              tabIds: newTab.id!,
+              tabIds: newTab.id,
             });
             let [title, color] = [randomGroup.name, randomGroup.color];
             if (inputValue !== "") {
               [title, color] = inputValue.split(colorSeparator);
             }
-            console.log(inputValue !== "", randomGroup, title, color);
             await chrome.tabGroups.update(groupId, {
               title: title.trim(),
               color: colorFix(color),
