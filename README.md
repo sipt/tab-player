@@ -1,154 +1,98 @@
-<a name="readme-top"></a>
-
-[![Stargazers][stars-shield]][stars-url]
-[![Issues][issues-shield]][issues-url]
-[![MIT License][license-shield]][license-url]
-
-<!-- PROJECT LOGO -->
-<br />
 <div align="center">
-  <a href="https://github.com/sipt/tab-player">
-    <img src="public/icon-128.png" alt="Logo" width="80" height="80">
-  </a>
+<img src="public/icon-128.png" alt="logo"/>
+<h1> Chrome Extension Boilerplate with<br/>React + Vite + TypeScript</h1>
 
-  <h3 align="center">Tab Player</h3>
+![](https://img.shields.io/badge/React-61DAFB?style=flat-square&logo=react&logoColor=black)
+![](https://img.shields.io/badge/Typescript-3178C6?style=flat-square&logo=typescript&logoColor=white)
+![](https://badges.aleen42.com/src/vitejs.svg)
+![GitHub action badge](https://github.com/Jonghakseo/chrome-extension-boilerplate-react-vite/actions/workflows/build-zip.yml/badge.svg)
+<img src="https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https://github.com/Jonghakseo/chrome-extension-boilerplate-react-viteFactions&count_bg=%23#222222&title_bg=%23#454545&title=😀&edge_flat=true" alt="hits"/>
 
-  <p align="center">
-    以一种简便的方式来管理你的 Chrome 标签。
-    <br />
-    <br />
-    <a href="https://chrome.google.com/webstore/detail/tab-player/jnmgfgjcefakjoeoinpncbilkdnikbgc">Install</a>
-    ·
-    <a href="https://github.com/sipt/tab-player/issues">Report Bug</a>
-    ·
-    <a href="https://github.com/sipt/tab-player/issues">Request Feature</a>
-  </p>
+
+> This project is listed in the [Awesome Vite](https://github.com/vitejs/awesome-vite)
+
 </div>
 
-![Screen Shot](doc/screen.jpg)
+## Table of Contents
 
-<details>
-  <summary>目录</summary>
-  <ol>
-    <li>
-      <a href="#项目介绍">项目介绍</a>
-    </li>
-    <li>
-      <a href="#使用">使用</a>
-      <ul>
-        <li><a href="#Tab 筛选">Tab 筛选</a></li>
-        <li><a href="#Tab 操作">Tab 操作</a></li>
-        <li><a href="#暗黑/明亮模式切换">暗黑/明亮模式切换</a></li>
-      </ul>
-    </li>
-    <li><a href="#roadmap">Roadmap</a></li>
-    <li><a href="#赞赏">赞赏</a></li>
-    <li><a href="#license">License</a></li>
-  </ol>
-</details>
+- [Intro](#intro)
+- [Features](#features)
+- [Installation](#installation)
+  - [Procedures](#procedures)
+- [Screenshots](#screenshots)
+  - [NewTab](#newtab)
+  - [Popup](#popup)  
+- [Examples](#examples)
+- [Documents](#documents)
 
-<!-- ABOUT THE PROJECT -->
+## Intro <a name="intro"></a>
+This boilerplate is made for creating chrome extensions using React and Typescript.
+> The focus was on improving the build speed and development experience with Vite.
 
-## 项目介绍
+## Features <a name="features"></a>
+- [React 18](https://reactjs.org/)
+- [TypeScript](https://www.typescriptlang.org/)
+- [Jest](https://jestjs.io/)
+- [React Testing Library](https://testing-library.com/docs/react-testing-library/intro/)
+- [Vite](https://vitejs.dev/)
+- [SASS](https://sass-lang.com/)
+- [Tailwind CSS](https://tailwindcss.com/)
+- [ESLint](https://eslint.org/)
+- [Prettier](https://prettier.io/)
+- [Chrome Extension Manifest Version 3](https://developer.chrome.com/docs/extensions/mv3/intro/)
+- HRR(Hot Rebuild & Refresh/Reload)
 
-[![Tab Player Screen Shot][product-screenshot]](https://github.com/sipt/tab-player)
+## Installation <a name="installation"></a>
 
-在使用 Chrome 浏览网页时，可能会打开很多标签页，这时候使用 Tab Player 可以轻松清理不需要的或目前无用的标签页，使 Chrome 更加清爽。
+### Procedures <a name="procedures"></a>
+1. Clone this repository.
+2. Change `name` and `description` in package.json => **Auto synchronize with manifest** 
+3. Run `yarn install` or `npm i` (check your node version >= 16.6, recommended >= 18)
+4. Run `yarn dev` or `npm run dev`
+5. Load Extension on Chrome
+   1. Open - Chrome browser
+   2. Access - chrome://extensions
+   3. Check - Developer mode
+   4. Find - Load unpacked extension
+   5. Select - `dist` folder in this project (after dev or build)
+6. If you want to build in production, Just run `yarn build` or `npm run build`.
 
-虽然已经有很多 Chrome 插件可以管理标签页，但试用了很多都不能完全满足我的需求：
+## Screenshots <a name="screenshots"></a>
 
-- 可以通过关键词模糊匹配或与标签页当前的状态配合，快速批量选中。
-- 可以支持跨窗口选择，但也可以根据窗口来隔离。
-- 可以手动选择标签页，或排除一些不想关闭的标签页。
-- 可以快捷操作关闭和 Pin，支持全键盘操作。
-- 界面更美观。
+### New Tab <a name="newtab"></a>
 
-因此，我想与有相同需求的人分享这个插件。
+<img width="971" src="https://user-images.githubusercontent.com/53500778/162631646-cd40976b-b737-43d0-8e6a-6ac090a2e2d4.png">
 
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
+### Popup <a name="popup"></a>
 
-## 安装
+<img width="314" alt="popup" src="https://user-images.githubusercontent.com/53500778/203561728-23517d46-12e3-4139-8a4f-e0b2f22a6ab3.png">
 
-前往 [Chrome Web Store - Tab Player](https://chrome.google.com/webstore/detail/tab-player/jnmgfgjcefakjoeoinpncbilkdnikbgc) 安装插件
+## Examples <a name="examples"></a>
+- https://github.com/Jonghakseo/drag-gpt-extension
+- https://github.com/Jonghakseo/pr-commit-noti
+- https://github.com/ariburaco/chatgpt-file-uploader-extended
 
-<!-- USAGE EXAMPLES -->
+## Documents <a name="documents"></a>
+- [Vite Plugin](https://vitejs.dev/guide/api-plugin.html)
+- [ChromeExtension](https://developer.chrome.com/docs/extensions/mv3/)
+- [Rollup](https://rollupjs.org/guide/en/)
+- [Rollup-plugin-chrome-extension](https://www.extend-chrome.dev/rollup-plugin)
 
-## 使用
 
-### Tab 筛选
+## Star History
 
-你可以使用关键词（包含在 title 或 URL 中）进行筛选：
+[![Star History Chart](https://api.star-history.com/svg?repos=Jonghakseo/chrome-extension-boilerplate-react-vite&type=Date)](https://star-history.com/#Jonghakseo/chrome-extension-boilerplate-react-vite&Date)
 
-- 可以使用保留词进行筛选（`@loading`，`@unloaded`，`@complete`，`@pinned`，`@unpinned`，`@audible`）。当使用保留词时，只能使用一个，并且需要放在输入框开头，用空格与后面的关键词分开。
-- 可以使用鼠标左键点击标签页来添加额外的标签页或取消选定的标签页。
-- 可以使用鼠标左键点击窗口来锁定筛选生效的窗口。
 
-![Input Filter](doc/SCR-20230724-qvt.png)
 
-### Tab 操作
+---
+## Thanks To
 
-可以在输入框中直接输入 `Enter` 或点击输入框右侧的 Magic 按钮，弹出可操作选项。支持全键盘操作，切换焦点使用 `Tab` 键。目前支持 `Close` 和 `Pin`。
+| [Jetbrains](https://jb.gg/OpenSourceSupport)                                                                           | [Jackson Hong](https://www.linkedin.com/in/j-acks0n/)                                            |
+|--------------------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------|
+| <img width="100" src="https://resources.jetbrains.com/storage/products/company/brand/logos/jb_beam.png" alt="JetBrains Logo (Main) logo."> | <img width="100" src='https://avatars.githubusercontent.com/u/23139754?v=4' alt='Jackson Hong'/> |
 
-![Operate Tab](doc/SCR-20230724-qzl.png)
 
-_For more examples, please refer to the [Documentation](https://example.com)_
+---
 
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
-
-### 暗黑/明亮模式切换
-
-点击右上角的 月亮 或 太阳 按钮进行切换。
-
-<!-- ROADMAP -->
-
-## Roadmap
-
-- [x] 1.0 基础功能支持
-  - 灵感来源💡：在使用 Chrome 过程中，个人习惯会打开很多的 Tab。所以想能有个方便的方式批量关闭这些 Tab。
-  - [x] 支持关键词筛选
-  - [x] 支持保留词筛选
-  - [x] 支持 鼠标选择/取消选择 Tab
-  - [x] 支持 鼠标选择/取消选择 Window
-  - [x] 支持 关闭/Pin Tab
-  - [x] 支持关闭 Window
-  - [x] 支持暗黑/明亮主题
-- [ ] 1.1 Amazing! Group & Switch Tab
-  - 灵感来源💡：有时候在处理一个问题时，会打开很多个Tab，但他们又归属于一个来源，所以希望它们可以在一个 Group 中。我在处理一个新的问题时，可以再新建一个 Group，原生的交互关不友好。Tab 之前的切换也希望可以像操作系统中的 `Alt(Opt)+Tab` 或 Cmd+` 一样丝滑。
-  - [ ] Tab 切换
-  - [ ] Group 切换
-  - [ ] Group 创建与列表
-- [ ] 1.2 SmartBox & Options
-  - [ ] 支持智能规则筛选（SmartBox）
-    - [ ] Tab Status
-    - [ ] Tab 长期不活跃
-    - [ ] 预置策略
-  - [ ] Options
-- [ ] 1.3 待计划。。。
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
-
-## 赞赏
-
-觉得这个项目不错，给个 Star 或 请我我喝杯咖啡：
-|微信赞赏|支付宝赞赏|
-|---|---|
-|![微信赞赏](doc/wechat.jpeg)|![支付宝赞赏](doc/alipay.jpg)|
-
-<!-- LICENSE -->
-
-## License
-
-Distributed under the MIT License. See `LICENSE.txt` for more information.
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
-
-<!-- MARKDOWN LINKS & IMAGES -->
-<!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
-
-[stars-shield]: https://img.shields.io/github/stars/sipt/tab-player.svg
-[stars-url]: https://github.com/sipt/tab-player/stargazers
-[issues-shield]: https://img.shields.io/github/issues/sipt/tab-player.svg
-[issues-url]: https://github.com/sipt/tab-player/issues
-[license-shield]: https://img.shields.io/github/license/sipt/tab-player.svg
-[license-url]: https://github.com/sipt/tab-player/blob/master/LICENSE.txt
-[product-screenshot]: doc/demo-video.gif
+[Jonghakseo](https://nookpi.tistory.com/)
