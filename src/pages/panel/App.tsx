@@ -17,7 +17,10 @@ function App() {
   const [refresh, setRefresh] = useState(0);
   const [colorSeparator, setColorSeparator] = useState<string>("[[");
   const [defaultNames, setDefaultNames] = useState<string[]>([]);
-  let randomGroup: { name: string; color: string } = { name: "", color: "" };
+  const [randomGroup, setRandomGroup] = useState<{
+    name: string;
+    color: string;
+  }>();
   useEffect(() => {
     window.addEventListener("message", (event) => {
       setPort(event.ports?.[0]);
@@ -144,15 +147,16 @@ function App() {
         ...fg,
       ];
     } else if (inputValue === "") {
-      randomGroup.name =
-        defaultNames[Math.floor(Math.random() * defaultNames.length)];
-      randomGroup.color = colors[Math.floor(Math.random() * colors.length)];
-      console.log(randomGroup);
+      const rg = {
+        name: defaultNames[Math.floor(Math.random() * defaultNames.length)],
+        color: colors[Math.floor(Math.random() * colors.length)],
+      };
+      setRandomGroup(rg);
       fg = [
         {
           id: 0,
-          title: randomGroup.name,
-          color: randomGroup.color,
+          title: rg.name,
+          color: rg.color,
         } as chrome.tabGroups.TabGroup,
         ...fg,
       ];
@@ -273,6 +277,7 @@ function App() {
         }
         try {
           await lockTabs();
+
           if (selectGroupId !== 0) {
             const tabs = await chrome.tabs.query({ groupId: selectGroupId });
             const tab = tabs.at(-1);
@@ -283,8 +288,12 @@ function App() {
             const groupId = await chrome.tabs.group({
               tabIds: newTab.id!,
             });
-            const [title, color] = inputValue.split(colorSeparator);
-            await chrome.tabGroups.update(groupId!, {
+            let [title, color] = [randomGroup.name, randomGroup.color];
+            if (inputValue !== "") {
+              [title, color] = inputValue.split(colorSeparator);
+            }
+            console.log(inputValue !== "", randomGroup, title, color);
+            await chrome.tabGroups.update(groupId, {
               title: title.trim(),
               color: colorFix(color),
             });
