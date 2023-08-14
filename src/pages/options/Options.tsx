@@ -135,7 +135,7 @@ function Options() {
           <div className="flex flex-nowrap justify-between items-start">
             <label>Default Names</label>
             <textarea
-              className="textarea textarea-bordered w-64 h-48  dark:placeholder:text-slate-600 placeholder:text-slate-400 focus:outline-indigo-500"
+              className="textarea textarea-bordered w-64 h-48 resize-none  dark:placeholder:text-slate-600 placeholder:text-slate-400 focus:outline-indigo-500"
               placeholder="Default names split by line"
               value={defaultNames.join("\n")}
               onChange={(e) => {
