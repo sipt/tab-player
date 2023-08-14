@@ -10,3 +10,25 @@
 body {
   font-family: "tab-player-font";
 }
+
+/* width */
+::-webkit-scrollbar {
+  width: 8px;
+  cursor: default;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: tranparent; 
+}
+ 
+/* Handle */
+::-webkit-scrollbar-thumb {
+  border-radius: 5px;
+  background: #555;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #888; 
+}
