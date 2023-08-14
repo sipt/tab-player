@@ -25,7 +25,7 @@ chrome.tabs.onCreated.addListener(async (tab) => {
     const focusOnGroupId = items.focusOnGroupId || 0;
     const groups = await chrome.tabGroups.query({});
     const group = groups.find((group) => group.id === focusOnGroupId);
-    if (group) {
+    if (group && group.windowId === tab.windowId) {
       await chrome.tabs.group({ groupId: group.id, tabIds: tab.id });
     }
   } catch (err) {
