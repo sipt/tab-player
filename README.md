@@ -34,6 +34,7 @@
 - [Tab Group](#tab-group)
   - [Tab Group 创建](#tab-group-创建)
   - [Tab Group 查看、聚焦、关闭](#tab-group-查看聚焦关闭)
+- [Options](#options)
 - [Roadmap](#roadmap)
 - [赞赏](#赞赏)
 - [License](#license)
@@ -133,6 +134,10 @@ Tab Group 可以通过关键词搜索：
 
 在选中一个 Tab 且 焦点在输入框中，按下 `Cmd + Enter` 可以关闭一个 Group。
 
+## Options
+
+![Tab-Player Options](doc/SCR-20230816-uoto.png)
+
 <!-- ROADMAP -->
 
 ## Roadmap
@@ -146,12 +151,17 @@ Tab Group 可以通过关键词搜索：
   - [x] 支持 关闭/Pin Tab
   - [x] 支持关闭 Window
   - [x] 支持暗黑/明亮主题
-- [ ] 1.1 Amazing! Group & Switch Tab
-  - 灵感来源 💡：有时候在处理一个问题时，会打开很多个 Tab，但他们又归属于一个来源，所以希望它们可以在一个 Group 中。我在处理一个新的问题时，可以再新建一个 Group，原生的交互并不友好。Tab 之间的切换也希望可以像操作系统中的 `Alt(Opt)+Tab` 或 Cmd+` 一样丝滑。
+- [x] 1.1 Group Tab
+  - 灵感来源 💡：有时候在处理一个问题时，会打开很多个 Tab，但他们又归属于一个来源，所以希望它们可以在一个 Group 中。我在处理一个新的问题时，可以再新建一个 Group，原生的交互并不友好。
+  - [x] Tab Group 快速创建
+  - [x] Tab Group 查看筛选
+  - [x] Tab Group 关闭
+- [ ] 1.2 Switch Tab
+  - 灵感来源 💡：Tab 之间的切换也希望可以像操作系统中的 `Alt(Opt)+Tab` 或 Cmd+` 一样丝滑。
   - [ ] Tab 切换
   - [ ] Group 切换
   - [ ] Group 创建与列表
-- [ ] 1.2 SmartBox & Options
+- [ ] 1.3 SmartBox & Options
   - [ ] 支持智能规则筛选（SmartBox）
     - [ ] Tab Status
     - [ ] Tab 长期不活跃
