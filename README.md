@@ -25,31 +25,38 @@
   </p>
 </div>
 
-![Screen Shot](doc/screen.jpg)
-
-<details>
-  <summary>目录</summary>
-  <ol>
-    <li>
-      <a href="#项目介绍">项目介绍</a>
-    </li>
-    <li>
-      <a href="#使用">使用</a>
-      <ul>
-        <li><a href="#Tab 筛选">Tab 筛选</a></li>
-        <li><a href="#Tab 操作">Tab 操作</a></li>
-        <li><a href="#暗黑/明亮模式切换">暗黑/明亮模式切换</a></li>
-      </ul>
-    </li>
-    <li><a href="#roadmap">Roadmap</a></li>
-    <li><a href="#赞赏">赞赏</a></li>
-    <li><a href="#license">License</a></li>
-  </ol>
-</details>
+- [项目介绍](#项目介绍)
+- [安装](#安装)
+- [Tab Clean](#tab-clean)
+  - [Tab 筛选](#tab-筛选)
+  - [Tab 操作](#tab-操作)
+  - [暗黑/明亮模式切换](#暗黑明亮模式切换)
+- [Tab Group](#tab-group)
+  - [Tab Group 创建](#tab-group-创建)
+  - [Tab Group 查看、聚焦、关闭](#tab-group-查看聚焦关闭)
+- [Roadmap](#roadmap)
+- [赞赏](#赞赏)
+- [License](#license)
 
 <!-- ABOUT THE PROJECT -->
 
 ## 项目介绍
+
+这个插件有两个部分组成：Tab-Clean 和 Tab-Group。
+
+**Tab-Clean**: 主要面向在使用 Chrome 浏览网页时，会打开很多标签页的场景。这时候使用 Tab Player 可以轻松清理不需要的或目前无用的标签页，使 Chrome 更加清爽。
+
+**Tab-Group**: 更多是培养标签使用习惯，利用 Chrome 自带的 Group 功能，让一件事情聚焦在一个 Group 内。使用 Tab-Palyer 可以方便创建、切换和关闭 Group。
+
+与有相同需求的人分享这个插件。
+
+## 安装
+
+前往 [Chrome Web Store - Tab Player](https://chrome.google.com/webstore/detail/tab-player/jnmgfgjcefakjoeoinpncbilkdnikbgc) 安装插件
+
+## Tab Clean
+
+![Screen Shot](doc/screen.jpg)
 
 [![Tab Player Screen Shot][product-screenshot]](https://github.com/sipt/tab-player)
 
@@ -63,17 +70,9 @@
 - 可以快捷操作关闭和 Pin，支持全键盘操作。
 - 界面更美观。
 
-因此，我想与有相同需求的人分享这个插件。
+**！！！ 只在 popup 内使用 ！！！**
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
-
-## 安装
-
-前往 [Chrome Web Store - Tab Player](https://chrome.google.com/webstore/detail/tab-player/jnmgfgjcefakjoeoinpncbilkdnikbgc) 安装插件
-
-<!-- USAGE EXAMPLES -->
-
-## 使用
 
 ### Tab 筛选
 
@@ -91,13 +90,48 @@
 
 ![Operate Tab](doc/SCR-20230724-qzl.png)
 
-_For more examples, please refer to the [Documentation](https://example.com)_
-
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 ### 暗黑/明亮模式切换
 
 点击右上角的 月亮 或 太阳 按钮进行切换。
+
+## Tab Group
+
+![Tab Group ScreenShot](doc/SCR-20230816-umhx.png)
+
+如果按照 Tab Group 的使用方法，则可以让你的 Chrome 清晰且有条理。
+
+使用理念：把所有的事情聚焦在一个 Group 内。
+
+- 当有一个新的事情，需要查询网页时。新建一个 Tab Group 来处理。
+- 当前事情处理过程中，有优先级高的事情插进来，可以创建一个新的 Tab Group 并聚焦在上面。
+- 当前事情解决后，可以关闭这个 Tab Group。
+- 像需要放松休息时，需要逛逛论坛社交网站，可以放在一个 常驻 的 Tab Group 中，需要时聚焦在这个 Tab Group 上。
+
+以上就是使用的理念，使用 Tab Palyer 可以轻松实现以上动作。
+
+### Tab Group 创建
+
+有两种创建方式：
+
+1. 可以通过 omnibox 使用 `tp` 创建，默认使用 `[[` 切分颜色，如果不设置默认是 grey。（可选颜色："grey","blue","red","yellow","green","pink","purple","cyan","orange"）
+   ![Omnibox create Tab Group](doc/SCR-20230816-ttyt.png)
+
+2. 可以通过 `cmd + shift + o` 呼出 Tab Group 弹窗进行操作。默认使用 `[[` 切分颜色，不设置默认是 `grey`。（可选颜色："grey","blue","red","yellow","green","pink","purple","cyan","orange"；这个弹窗只能在可以运行 content script 的页面呼出）
+   ![Panel create Tab Group](doc/SCR-20230816-txif.png)
+   不输入任何内容，会随机一个名称和颜色，输入 `Enter` 就会创建。
+   ![Panel create Random Tab Group](doc/SCR-20230816-tyvw.png)
+
+### Tab Group 查看、聚焦、关闭
+
+Tab Group 可以通过关键词搜索：
+![Search Tab Group](doc/SCR-20230816-uaac.png)
+
+在列表中右侧的小时钟图标表示当前聚焦，选中其它 item，按下 `Enter`，可以切换聚焦。**！！！当聚焦在一个 Tab Group 时，创建同一个 Window 下新的 Tab 会自动归入聚焦的 Group 中。**
+![Focus Tab Group](doc/SCR-20230816-uaxy.png)
+
+在选中一个 Tab 且 焦点在输入框中，按下 `Cmd + Enter` 可以关闭一个 Group。
 
 <!-- ROADMAP -->
 
@@ -113,7 +147,7 @@ _For more examples, please refer to the [Documentation](https://example.com)_
   - [x] 支持关闭 Window
   - [x] 支持暗黑/明亮主题
 - [ ] 1.1 Amazing! Group & Switch Tab
-  - 灵感来源 💡：有时候在处理一个问题时，会打开很多个 Tab，但他们又归属于一个来源，所以希望它们可以在一个 Group 中。我在处理一个新的问题时，可以再新建一个 Group，原生的交互关不友好。Tab 之前的切换也希望可以像操作系统中的 `Alt(Opt)+Tab` 或 Cmd+` 一样丝滑。
+  - 灵感来源 💡：有时候在处理一个问题时，会打开很多个 Tab，但他们又归属于一个来源，所以希望它们可以在一个 Group 中。我在处理一个新的问题时，可以再新建一个 Group，原生的交互并不友好。Tab 之间的切换也希望可以像操作系统中的 `Alt(Opt)+Tab` 或 Cmd+` 一样丝滑。
   - [ ] Tab 切换
   - [ ] Group 切换
   - [ ] Group 创建与列表
@@ -129,7 +163,7 @@ _For more examples, please refer to the [Documentation](https://example.com)_
 
 ## 赞赏
 
-觉得这个项目不错，给个 Star 或 请我我喝杯咖啡：
+觉得这个项目不错，给个 Star 或 请我喝杯咖啡：
 |微信赞赏|支付宝赞赏|
 |---|---|
 |![微信赞赏](doc/wechat.jpeg)|![支付宝赞赏](doc/alipay.jpg)|
